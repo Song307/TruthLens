@@ -1,7 +1,45 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-:root {
-  font-family: 'Pretendard', sans-serif; /* 폰트 설정 권장 */
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #00E5FF;
+  --color-brand-light: #80F2FF;
+  --color-brand-dark: #00B3CC;
+  --color-dark: #0B0F19;
+  --color-dark-card: rgba(17, 24, 39, 0.7);
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+  
+  --shadow-glow: 0 0 20px rgba(0, 229, 255, 0.3);
+  --shadow-glow-lg: 0 0 30px rgba(0, 229, 255, 0.5);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; filter: brightness(1); box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+    50% { opacity: .8; filter: brightness(1.5); box-shadow: 0 0 30px rgba(0, 229, 255, 0.6); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-slate-200 font-sans min-h-screen;
+    font-family: 'Inter', 'Pretendard', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-dark-card backdrop-blur-xl border border-dark-border shadow-glass;
+  }
+  
+  .glass-button {
+    @apply relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300;
+  }
 }
