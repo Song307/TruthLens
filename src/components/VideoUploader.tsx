@@ -86,6 +86,15 @@ const VideoUploader: React.FC<Props> = ({ onAnalyze, loading }) => {
           >
             {loading ? <Loader2 className="animate-spin" size={24} /> : '딥페이크 조작 분석 시작'}
           </button>
+
+          {loading && (
+            <div className="w-full mt-4 p-4 bg-white/5 border border-brand/30 rounded-2xl relative z-10">
+              <p className="text-sm text-slate-300 text-center leading-relaxed">
+                <span className="text-brand font-semibold">분석 중입니다...</span> 동영상 파일 크기와 네트워크 속도에 따라 <br/>
+                <span className="text-slate-400">1분 이상</span>이 소요될 수 있습니다.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

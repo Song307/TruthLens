@@ -147,6 +147,15 @@ const App: React.FC = () => {
                 </button>
               </div>
 
+              {loading && (
+                <div className="p-4 bg-white/5 border border-brand/30 rounded-2xl animate-in fade-in duration-300 z-10">
+                  <p className="text-sm text-slate-300 text-center leading-relaxed">
+                    <span className="text-brand font-semibold">분석 중입니다...</span> 네트워크 속도에 따라 <br/>
+                    <span className="text-slate-400">몇 초에서 수십 초</span>가 소요될 수 있습니다.
+                  </p>
+                </div>
+              )}
+
               {textResult && (
                 <div className="glass-panel p-8 md:p-10 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500 z-10 relative">
                   <div className="flex justify-between items-start mb-6 gap-4">

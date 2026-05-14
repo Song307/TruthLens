@@ -141,6 +141,15 @@ const MediaUploader: React.FC<Props> = ({ onAnalyze, loading, fileType = 'image'
           >
             {loading ? <Loader2 className="animate-spin" size={24} /> : '딥페이크 조작 분석 시작'}
           </button>
+
+          {loading && (
+            <div className="w-full mt-4 p-4 bg-white/5 border border-brand/30 rounded-2xl relative z-10">
+              <p className="text-sm text-slate-300 text-center leading-relaxed">
+                <span className="text-brand font-semibold">분석 중입니다...</span> 파일 크기와 네트워크 속도에 따라 <br/>
+                <span className="text-slate-400">몇 초에서 수십 초</span>가 소요될 수 있습니다.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
