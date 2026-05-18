@@ -29,7 +29,7 @@ const VideoAnalysisResult: React.FC<Props> = ({ data }) => {
           <div className="absolute inset-0 bg-brand/5 group-hover:bg-brand/10 transition-colors z-0"></div>
           <span className="text-sm font-bold text-slate-400 mb-1 z-10 uppercase tracking-widest">최대 조작 확률</span>
           <div className={`text-5xl font-black z-10 drop-shadow-glow ${data.overall_probability > 50 ? 'text-rose-400' : 'text-emerald-400'}`}>
-            {data.overall_probability}%
+            {data.overall_probability.toFixed(2)}%
           </div>
         </div>
         <div className="md:col-span-2 glass-panel p-6 rounded-3xl flex items-center gap-5 relative overflow-hidden">
@@ -98,7 +98,7 @@ const VideoAnalysisResult: React.FC<Props> = ({ data }) => {
             <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden group">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand group-hover:shadow-[0_0_15px_rgba(0,229,255,1)] transition-shadow"></div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-3">해당 프레임 확률</span>
-              <div className="text-4xl font-black text-white mt-2 pl-3 drop-shadow-glow">{currentFrame.probability}%</div>
+              <div className="text-4xl font-black text-white mt-2 pl-3 drop-shadow-glow">{currentFrame.probability.toFixed(2)}%</div>
               <div className="w-full bg-dark-border h-3 rounded-full mt-4 overflow-hidden relative shadow-inner ml-3" style={{ width: 'calc(100% - 12px)' }}>
                 <div 
                   className={`h-full transition-all duration-1000 relative ${currentFrame.probability > 50 ? 'bg-gradient-to-r from-rose-600 to-rose-400' : 'bg-gradient-to-r from-brand-dark to-brand'}`}

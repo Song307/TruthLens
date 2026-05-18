@@ -189,13 +189,27 @@ const App: React.FC = () => {
             </div>
           ) : activeTab === 'image' ? (
             /* --- 이미지 분석 모드 --- */
-            <div className="space-y-10 animate-in fade-in duration-500">
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl animate-in fade-in duration-300 z-10 flex items-start gap-3 shadow-lg">
+                <span className="text-amber-400 mt-0.5 text-lg">⚠️</span>
+                <p className="text-sm text-slate-300 leading-relaxed flex-1">
+                  <strong className="text-amber-400 font-bold block mb-1">분석 정확도 안내</strong>
+                  현재 프로토타입 버전에서는 이미지 전처리 모델의 학습 데이터가 부족하여 분석의 정확도가 다소 낮을 수 있습니다.
+                </p>
+              </div>
               <MediaUploader onAnalyze={handleImageAnalyze} loading={loading} fileType="image" />
               {mediaResult && <MediaResult data={mediaResult} />}
             </div>
           ) : (
             /* --- 동영상 분석 모드 --- */
-            <div className="space-y-10 animate-in fade-in duration-500 max-w-[512px] mx-auto">
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl animate-in fade-in duration-300 z-10 flex items-start gap-3 shadow-lg">
+                <span className="text-amber-400 mt-0.5 text-lg">⚠️</span>
+                <p className="text-sm text-slate-300 leading-relaxed flex-1">
+                  <strong className="text-amber-400 font-bold block mb-1">분석 정확도 안내</strong>
+                  현재 프로토타입 버전에서는 동영상 전처리 모델의 학습 데이터가 부족하여 분석의 정확도가 다소 낮을 수 있습니다.
+                </p>
+              </div>
               <VideoUploader onAnalyze={handleVideoAnalyze} loading={loading} />
               {videoResult && (
                 <div className="glass-panel p-8 md:p-10 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500 z-10 relative">

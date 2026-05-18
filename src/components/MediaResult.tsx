@@ -18,7 +18,7 @@ const MediaResult: React.FC<Props> = ({ data }) => {
         </div>
         <div>
           <h3 className="text-2xl font-black text-white drop-shadow-glow tracking-wide">분석 결과: <span className={data.is_manipulated ? 'text-rose-400' : 'text-emerald-400'}>{data.is_manipulated ? '조작 의심' : '정상'}</span></h3>
-          <p className="text-slate-400 font-bold mt-1 tracking-wider text-sm uppercase">조작 확률: <span className={`text-lg ${data.is_manipulated ? 'text-rose-400' : 'text-emerald-400'}`}>{data.fake_probability}%</span></p>
+          <p className="text-slate-400 font-bold mt-1 tracking-wider text-sm uppercase">조작 확률: <span className={`text-lg ${data.is_manipulated ? 'text-rose-400' : 'text-emerald-400'}`}>{data.fake_probability.toFixed(2)}%</span></p>
         </div>
       </div>
 
