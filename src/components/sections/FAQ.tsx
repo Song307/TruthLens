@@ -140,4 +140,4 @@ const FAQ: React.FC<FAQProps> = ({ onAnalyzeStart }) => {
   );
 };
 
-export default FAQ;
+export default React.memo(FAQ);

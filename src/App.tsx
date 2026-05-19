@@ -11,7 +11,7 @@ import VideoAnalysisResult from './components/VideoAnalysisResult';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
-import titleBgImage from './assets/TL_Title_background.png';
+import titleBgImage from './assets/TL_Title_background.webp';
 
 const MarketNeed = lazy(() => import('./components/sections/MarketNeed'));
 const Limitations = lazy(() => import('./components/sections/Limitations'));
@@ -220,16 +220,16 @@ const App: React.FC = () => {
             <section className="w-full relative min-h-[calc(100vh-96px)] pt-24 pb-12 flex flex-col items-center justify-center text-center overflow-hidden">
               {/* Static Background Layer (Fixed image with default blue filter overlay) */}
               <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none bg-slate-950">
-                {/* 1. Static Background Image */}
+                {/* 1. Static Background Image (Pre-blurred WebP for optimal rendering) */}
                 <img 
                   src={titleBgImage} 
                   alt="Title Background" 
-                  className="w-full h-full object-cover absolute inset-0 blur-[6px] scale-[1.35] opacity-80"
+                  className="w-full h-full object-cover absolute inset-0 opacity-80 will-change-transform transform-gpu"
                 />
                 {/* 2. Default Blue Filter & Tint Overlay */}
                 <div className="absolute inset-0 w-full h-full bg-blue-600/40 mix-blend-color" />
-                {/* 3. Dimming & Contrast overlay for perfect text readability */}
-                <div className="absolute inset-0 w-full h-full bg-slate-950/65 backdrop-blur-[2px]" />
+                {/* 3. Dimming & Contrast overlay for perfect text readability (No backdrop-blur needed since WebP is pre-blurred) */}
+                <div className="absolute inset-0 w-full h-full bg-slate-950/70" />
               </div>
 
               {/* Title Content */}
