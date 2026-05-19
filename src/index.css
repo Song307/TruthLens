@@ -1,7 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-:root {
-  font-family: 'Pretendard', sans-serif; /* 폰트 설정 권장 */
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #2563EB;
+  --color-brand-light: #0EA5E9;
+}
+
+@layer base {
+  body {
+    @apply bg-[#F8FAFC] text-slate-900 font-sans min-h-screen tracking-tight;
+    font-family: 'Inter', 'Pretendard', sans-serif;
+  }
 }

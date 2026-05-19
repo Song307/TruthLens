@@ -1,0 +1,185 @@
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import ScrollReveal from '../ScrollReveal';
+
+const marketThreatItems = [
+  {
+    title: "딥페이크·가짜뉴스 문제 심각도",
+    stat: "89.5%",
+    bgText: "89.5%",
+    subheadline: "국민 10명 중 9명이 심각하게 인식",
+    headline: "일상 속으로 침투한 조작의 공포",
+    desc: "압도적인 다수의 국민이 가짜뉴스와 딥페이크를 단순한 불편을 넘어 심각한 사회적 위협으로 체감하고 있습니다.",
+    bgImage: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&auto=format&fit=crop&q=80",
+    align: "left",
+    barPercentage: 89.5,
+  },
+  {
+    title: "진짜·가짜 구분 걱정",
+    stat: "53%",
+    bgText: "53%",
+    subheadline: "스스로 판별 능력 부족 → AI 도구 필수",
+    headline: "육안 검증의 한계와 불안감 증폭",
+    desc: "정교해진 생성형 AI 기술로 인해 절반 이상의 국민이 스스로 진짜와 가짜를 구별할 수 없다는 깊은 불안을 느끼고 있습니다.",
+    bgImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1200&auto=format&fit=crop&q=80",
+    align: "right",
+    barPercentage: 53,
+  },
+  {
+    title: "뉴스 신뢰도",
+    stat: "28%",
+    bgText: "28%",
+    subheadline: "46개국 중 41위 (최하위권)",
+    headline: "무너져 내린 미디어 생태계의 신뢰",
+    desc: "계속되는 가짜뉴스 논란으로 인해 한국의 뉴스 신뢰도는 조사 대상 46개국 중 41위라는 충격적인 수준에 머물러 있습니다.",
+    bgImage: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80",
+    align: "left",
+    barPercentage: 28,
+  },
+  {
+    title: "지능정보사회 부작용 1위",
+    stat: "1위",
+    bgText: "1위",
+    subheadline: "생성형 AI 대중화 → 조작 진입장벽 붕괴",
+    headline: "가짜뉴스·허위정보 유포의 일상화",
+    desc: "누구나 클릭 몇 번으로 정교한 가짜뉴스를 생성하고 유포할 수 있게 되면서, 허위정보가 지능정보사회의 가장 큰 부작용 1위로 등극했습니다.",
+    bgImage: "https://images.unsplash.com/photo-1563089145-599997674d42?w=1200&auto=format&fit=crop&q=80",
+    align: "right",
+    barPercentage: 100,
+  }
+];
+
+const MarketNeed: React.FC = () => {
+  const [activeThreatIdx, setActiveThreatIdx] = useState<number>(0);
+  const marketThreatRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: threatScrollProgress } = useScroll({
+    target: marketThreatRef,
+    offset: ["start start", "end end"]
+  });
+
+  useMotionValueEvent(threatScrollProgress, "change", (latest) => {
+    if (latest < 0.25) setActiveThreatIdx(0);
+    else if (latest < 0.5) setActiveThreatIdx(1);
+    else if (latest < 0.75) setActiveThreatIdx(2);
+    else setActiveThreatIdx(3);
+  });
+
+  return (
+    <section id="market-need" ref={marketThreatRef} className="w-full relative bg-white border-t border-slate-100 overflow-hidden">
+      
+      {/* Sticky Background Text Container */}
+      <div className="sticky top-0 w-full h-screen flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeThreatIdx}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[120px] md:text-[250px] lg:text-[320px] font-black text-slate-100/80 tracking-tighter text-center whitespace-nowrap"
+          >
+            {marketThreatItems[activeThreatIdx].bgText}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Vertical Stacked Content Container */}
+      <div className="relative z-10 -mt-[100vh]">
+        
+        {/* Top Section Header */}
+        <div className="w-full px-[20%] pt-20 mb-12">
+          <ScrollReveal>
+            <div className="text-left max-w-4xl">
+              <div className="inline-block px-4 py-1.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-full text-xs font-bold mb-4 tracking-wider">
+                MARKET THREAT
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
+                설문조사로 본 문제의 심각성
+              </h2>
+              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                아래 조사 결과는 가짜뉴스·딥페이크 문제가 이미 전 국민적 과제임을 명확히 보여줍니다.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+
+        {/* 4 Vertical Sections Stacked */}
+        <div className="space-y-32 md:space-y-48 pb-32">
+          {marketThreatItems.map((item, idx) => (
+            <div key={idx} className="min-h-[80vh] flex items-center justify-center w-full px-[20%]">
+              <motion.div
+                initial={{ opacity: 0, y: 120 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className={`w-full flex flex-col gap-8 md:gap-16 items-center ${
+                  item.align === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'
+                }`}
+              >
+                {/* Large Image */}
+                <div className="w-full lg:w-1/2 h-[350px] md:h-[500px] relative rounded-none overflow-hidden shadow-2xl border border-slate-200/60 group">
+                  <img
+                    src={item.bgImage}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
+                  <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white z-10">
+                    <span className="text-xs md:text-sm font-bold tracking-widest uppercase bg-rose-600/90 backdrop-blur-md px-3 py-1 rounded-full">
+                      {item.stat}
+                    </span>
+                    <span className="text-xs text-white/80 font-medium">TruthLens AI Fact-Check</span>
+                  </div>
+                </div>
+
+                {/* Text Details & Visual Bar Chart */}
+                <div className="w-full lg:w-1/2 space-y-6 px-4 md:px-8 py-6">
+                  <div className="space-y-3">
+                    <div className="text-4xl md:text-6xl font-black text-rose-600 tracking-tight">
+                      {item.stat}
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                      {item.title}
+                    </h3>
+                    <div className="text-lg md:text-xl font-bold text-slate-700">
+                      {item.subheadline}
+                    </div>
+                    <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed pt-2 border-t border-slate-200">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  {/* Visual Bar Chart */}
+                  <div className="space-y-2 pt-4">
+                    <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      <span>심각도 지표 (Severity Index)</span>
+                      <span>{item.barPercentage}%</span>
+                    </div>
+                    <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${item.barPercentage}%` }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="h-full bg-gradient-to-r from-rose-500 to-rose-600 rounded-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Footer Source Credit */}
+        <div className="w-full px-[20%] border-t border-slate-100 pt-6 pb-12">
+          <p className="text-xs md:text-sm text-slate-400 font-medium leading-relaxed text-center md:text-left">
+            출처: 한국언론진흥재단(KPF), 딥페이크 관련 인식 조사 (2024) / 로이터 저널리즘 연구소 & 한국언론진흥재단, 디지털 뉴스 리포트 (2023/2024) / 방송통신위원회 & KISDI, 지능정보사회 이용자 패널조사 (2023/2024)
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default MarketNeed;
