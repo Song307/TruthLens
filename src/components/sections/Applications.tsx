@@ -46,26 +46,9 @@ const Applications: React.FC = () => {
   return (
     <>
       {/* --- TruthLens 적용 분야 및 서비스 영역 (Interactive Expanding Accordion Showcase) --- */}
-      <section id="applications" className="w-full py-24 bg-white text-slate-900 overflow-hidden border-t border-slate-100">
-        {/* Section Header */}
-        <div className="w-full px-[20%] mb-12">
-          <ScrollReveal>
-            <div className="text-left max-w-4xl">
-              <div className="inline-block px-4 py-1.5 bg-blue-50 border border-blue-200 text-brand rounded-full text-xs font-bold mb-4 tracking-wider">
-                APPLICATION FIELDS
-              </div>
-              <h2 className="text-2xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
-                사회 전반의 신뢰를 재구축하는 5대 핵심 영역
-              </h2>
-              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
-                언론 보도부터 금융, 공공 안보까지 TruthLens의 AI 검증 엔진이 활약하는 주요 분야를 확인해보세요.
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-
+      <section id="applications" className="w-full bg-slate-950 overflow-hidden">
         {/* Expanding Accordion Container */}
-        <div className="w-full h-[700px] md:h-[950px] flex flex-col md:flex-row overflow-hidden bg-slate-950">
+        <div className="w-full h-[710px] md:h-[960px] flex flex-col md:flex-row overflow-hidden bg-slate-950">
           {showcaseItems.map((item, idx) => {
             const isActive = hoveredShowcase === idx;
             return (

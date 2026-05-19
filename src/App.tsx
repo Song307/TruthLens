@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquareText, Image as ImageIcon, Loader2, Film, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 import api from './api/axios';
@@ -75,6 +75,16 @@ const App: React.FC = () => {
   const [videoResult, setVideoResult] = useState<VideoAnalysisData | null>(null);
 
   const [activeInfoSection, setActiveInfoSection] = useState<string>('market-need');
+  const stickyHeaderRef = useRef<HTMLDivElement>(null);
+
+  const scrollToStickyHeader = () => {
+    if (stickyHeaderRef.current) {
+      const topOffset = stickyHeaderRef.current.offsetTop;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: window.innerHeight * 0.75, behavior: 'smooth' });
+    }
+  };
 
   // [기능 1] 텍스트 분석 핸들러
   const handleTextAnalyze = async () => {
@@ -145,7 +155,7 @@ const App: React.FC = () => {
           if (subSection) {
             setActiveInfoSection(subSection);
             setTimeout(() => {
-              window.scrollTo({ top: window.innerHeight * 0.75, behavior: 'smooth' });
+              scrollToStickyHeader();
             }, 50);
           }
         }} 
@@ -220,7 +230,7 @@ const App: React.FC = () => {
             </section>
 
             {/* --- Sticky Section Header Framework (Tab Navigation Bar) --- */}
-            <div className="sticky top-0 z-40 w-full h-24 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all px-[10%] md:px-[20%] flex items-center justify-start overflow-x-auto scrollbar-none">
+            <div ref={stickyHeaderRef} className="sticky top-0 z-40 w-full h-24 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all px-[10%] md:px-[20%] flex items-center justify-start overflow-x-auto scrollbar-none">
               <div className="flex items-center gap-8 md:gap-12 text-base md:text-lg font-bold text-slate-400 tracking-tight whitespace-nowrap">
                 {[
                   { id: 'market-need', label: '문제의 심각성' },
@@ -233,7 +243,7 @@ const App: React.FC = () => {
                     key={tab.id}
                     onClick={() => {
                       setActiveInfoSection(tab.id);
-                      window.scrollTo({ top: window.innerHeight * 0.75, behavior: 'smooth' });
+                      scrollToStickyHeader();
                     }}
                     className={`py-2 border-b-2 font-black transition-all cursor-pointer ${
                       activeInfoSection === tab.id
