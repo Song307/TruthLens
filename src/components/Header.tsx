@@ -3,7 +3,7 @@ import { ShieldCheck, Code2 } from 'lucide-react';
 
 interface HeaderProps {
   currentPage?: 'main' | 'analyze-text' | 'analyze-image' | 'analyze-video';
-  onNavigate?: (page: 'main' | 'analyze-text' | 'analyze-image' | 'analyze-video') => void;
+  onNavigate?: (page: 'main' | 'analyze-text' | 'analyze-image' | 'analyze-video', subSection?: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => {
@@ -19,16 +19,25 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
 
       setIsAtTop(currentScrollY < 20);
 
-      if (currentScrollY > heroHeight) {
-        // Past hero section: show only when scrolling UP
-        if (currentScrollY < lastScrollY) {
-          setIsVisible(true);
-        } else if (currentScrollY > lastScrollY && currentScrollY > lastScrollY + 5) {
+      if (currentPage === 'main') {
+        if (currentScrollY > heroHeight) {
+          // Past hero section on main page: always hide the main header to prevent overlap with sticky section header
           setIsVisible(false);
+        } else {
+          // Inside hero section on main page: always visible
+          setIsVisible(true);
         }
       } else {
-        // Inside hero section: always visible
-        setIsVisible(true);
+        // On dedicated analysis pages: show only when scrolling UP
+        if (currentScrollY > 100) {
+          if (currentScrollY < lastScrollY) {
+            setIsVisible(true);
+          } else if (currentScrollY > lastScrollY && currentScrollY > lastScrollY + 5) {
+            setIsVisible(false);
+          }
+        } else {
+          setIsVisible(true);
+        }
       }
 
       setLastScrollY(currentScrollY);
@@ -37,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, currentPage]);
 
   // Determine container classes based on state
   // 1. isAtTop: transparent background, full width, white text
@@ -50,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
       }`;
 
   const textColorClass = 'text-white';
-  const navLinkClass = 'text-sm font-semibold text-slate-200 hover:text-white transition-colors drop-shadow-sm';
+  const navLinkClass = 'text-sm font-semibold text-slate-200 hover:text-white transition-colors drop-shadow-sm cursor-pointer';
 
   return (
     <header className={headerContainerClass}>
@@ -63,10 +72,10 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
 
         {/* Navigation - Hidden on mobile */}
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#market-need" onClick={() => onNavigate?.('main')} className={navLinkClass}>시장 문제점</a>
-          <a href="#limitations" onClick={() => onNavigate?.('main')} className={navLinkClass}>기존 서비스 한계</a>
-          <a href="#core-tech" onClick={() => onNavigate?.('main')} className={navLinkClass}>핵심 기술</a>
-          <a href="#faq" onClick={() => onNavigate?.('main')} className={navLinkClass}>자주 묻는 질문</a>
+          <a href="#market-need" onClick={(e) => { e.preventDefault(); onNavigate?.('main', 'market-need'); }} className={navLinkClass}>시장 문제점</a>
+          <a href="#limitations" onClick={(e) => { e.preventDefault(); onNavigate?.('main', 'limitations'); }} className={navLinkClass}>기존 서비스 한계</a>
+          <a href="#core-tech" onClick={(e) => { e.preventDefault(); onNavigate?.('main', 'core-tech'); }} className={navLinkClass}>핵심 기술</a>
+          <a href="#faq" onClick={(e) => { e.preventDefault(); onNavigate?.('main', 'faq'); }} className={navLinkClass}>자주 묻는 질문</a>
         </nav>
 
         {/* Right Action Area */}
@@ -76,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
           </a>
           <button 
             onClick={() => onNavigate?.('analyze-text')}
-            className="hidden md:block px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-bold rounded-full hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/25 active:scale-95 border border-white/20"
+            className="hidden md:block px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-bold rounded-full hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/25 active:scale-95 border border-white/20 cursor-pointer"
           >
             {currentPage === 'main' ? '분석 시작하기 →' : '다른 분석하기 →'}
           </button>
