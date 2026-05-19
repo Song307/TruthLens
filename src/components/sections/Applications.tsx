@@ -129,4 +129,4 @@ const Applications: React.FC = () => {
   );
 };
 
-export default Applications;
+export default React.memo(Applications);

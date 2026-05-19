@@ -97,7 +97,7 @@ const MarketNeed: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 120 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className={`w-full flex flex-col gap-8 md:gap-16 items-center ${
                   item.align === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'
@@ -146,7 +146,7 @@ const MarketNeed: React.FC = () => {
                       <motion.div 
                         initial={{ width: 0 }}
                         whileInView={{ width: `${item.barPercentage}%` }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: "easeOut" }}
                         className="h-full bg-gradient-to-r from-rose-500 to-rose-600 rounded-full"
                       />
@@ -169,4 +169,4 @@ const MarketNeed: React.FC = () => {
   );
 };
 
-export default MarketNeed;
+export default React.memo(MarketNeed);

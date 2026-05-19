@@ -162,4 +162,4 @@ const CoreTech: React.FC = () => {
   );
 };
 
-export default CoreTech;
+export default React.memo(CoreTech);

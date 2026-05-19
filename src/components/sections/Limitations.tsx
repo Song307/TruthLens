@@ -114,4 +114,4 @@ const Limitations: React.FC = () => {
   );
 };
 
-export default Limitations;
+export default React.memo(Limitations);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, Code2, ChevronDown, MessageSquareText, ImageIcon, Film, AlertTriangle, XCircle, Zap, Layout, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,8 +8,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => {
-  const [scrollY, setScrollY] = useState(0);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
+  const isAtTopRef = useRef(true);
+  const isVisibleRef = useRef(true);
+
   const [isVisible, setIsVisible] = useState(true);
   const [isAtTop, setIsAtTop] = useState(true);
   const [isFactCheckOpen, setIsFactCheckOpen] = useState(false);
@@ -17,48 +19,64 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
   const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   useEffect(() => {
+    // Reset refs on page mount/change
+    lastScrollY.current = window.scrollY;
+    isAtTopRef.current = window.scrollY < 20;
+    setIsAtTop(window.scrollY < 20);
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const heroHeight = window.innerHeight * 0.75; // Approximate height of the hero section
 
-      setIsAtTop(currentScrollY < 20);
+      // 1. isAtTop State transition guard
+      const nextIsAtTop = currentScrollY < 20;
+      if (isAtTopRef.current !== nextIsAtTop) {
+        isAtTopRef.current = nextIsAtTop;
+        setIsAtTop(nextIsAtTop);
+      }
 
+      // 2. isVisible State transition guard
+      let nextIsVisible = true;
       if (currentPage === 'main') {
         if (currentScrollY > heroHeight) {
-          // Past hero section on main page: always hide the main header to prevent overlap with sticky section header
-          setIsVisible(false);
+          nextIsVisible = false;
         } else {
-          // Inside hero section on main page: always visible
-          setIsVisible(true);
+          nextIsVisible = true;
         }
       } else {
-        // On dedicated analysis pages: show only when scrolling UP
         if (currentScrollY > 100) {
-          if (currentScrollY < lastScrollY) {
-            setIsVisible(true);
-          } else if (currentScrollY > lastScrollY && currentScrollY > lastScrollY + 5) {
-            setIsVisible(false);
+          const lastScrollVal = lastScrollY.current;
+          if (currentScrollY < lastScrollVal) {
+            nextIsVisible = true;
+          } else if (currentScrollY > lastScrollVal && currentScrollY > lastScrollVal + 5) {
+            nextIsVisible = false;
+          } else {
+            nextIsVisible = isVisibleRef.current;
           }
         } else {
-          setIsVisible(true);
+          nextIsVisible = true;
         }
       }
 
-      setLastScrollY(currentScrollY);
-      setScrollY(currentScrollY);
+      if (isVisibleRef.current !== nextIsVisible) {
+        isVisibleRef.current = nextIsVisible;
+        setIsVisible(nextIsVisible);
+      }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, currentPage]);
+  }, [currentPage]);
 
   // Determine container classes based on state
   // 1. isAtTop: transparent background, full width, white text
   // 2. !isAtTop && isVisible: floating bold glassmorphic pill, white text
   // 3. !isVisible: translate-y out of view
   const headerContainerClass = isAtTop
-    ? `fixed top-0 left-0 w-full h-16 ${currentPage === 'main' ? 'bg-transparent' : 'bg-slate-950'} border-b border-transparent z-50 transition-all duration-500`
-    : `fixed left-[5%] w-[90%] md:left-[15%] md:w-[70%] h-16 rounded-full ${currentPage === 'main' ? 'bg-slate-900/90' : 'bg-slate-950/90'} backdrop-blur-md border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 transition-all duration-500 ${
+    ? `fixed top-0 left-0 w-full h-16 ${currentPage === 'main' ? 'bg-transparent' : 'bg-slate-950'} border-b border-transparent z-50 transition-all duration-500 will-change-transform transform-gpu`
+    : `fixed left-[5%] w-[90%] md:left-[15%] md:w-[70%] h-16 rounded-full ${currentPage === 'main' ? 'bg-slate-900/90' : 'bg-slate-950/90'} backdrop-blur-md border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 transition-all duration-500 will-change-[transform,backdrop-filter] transform-gpu ${
         isVisible ? 'top-4 opacity-100 translate-y-0' : '-top-20 opacity-0 -translate-y-full'
       }`;
 
@@ -67,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
 
   return (
     <header className={headerContainerClass}>
-      <div className={`w-full h-full flex items-center justify-between transition-all duration-500 ${isAtTop ? 'px-[10%] md:px-[20%]' : 'px-6 md:px-10'}`}>
+      <div className={`w-full h-full flex items-center justify-between transition-all duration-500 will-change-transform transform-gpu ${isAtTop ? 'px-[10%] md:px-[20%]' : 'px-6 md:px-10'}`}>
         {/* Logo Area */}
         <div className="flex items-center gap-2 cursor-pointer group" onClick={() => onNavigate?.('main')}>
           <ShieldCheck size={26} strokeWidth={2.5} className="text-cyan-400 group-hover:scale-110 transition-transform drop-shadow" />
@@ -317,4 +335,4 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
   );
 };
 
-export default Header;
+export default React.memo(Header);

@@ -11,7 +11,7 @@ import VideoAnalysisResult from './components/VideoAnalysisResult';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
-import titleBgImage from './assets/TL_Title_background.png';
+import titleBgImage from './assets/TL_Title_background.webp';
 
 const MarketNeed = lazy(() => import('./components/sections/MarketNeed'));
 const Limitations = lazy(() => import('./components/sections/Limitations'));
@@ -37,9 +37,8 @@ const App: React.FC = () => {
       subtitle: 'ARTICLE & TEXT',
       desc: '뉴스 기사 URL이나 의심되는 텍스트를 입력하여 RAG 기반 공공 DB와 실시간 교차 검증합니다.',
       icon: MessageSquareText,
-      badgeBg: 'bg-white/10 text-cyan-300 border-white/20',
-      hoverBorder: 'hover:border-cyan-400/50 hover:shadow-[0_8px_32px_rgba(6,182,212,0.25)]',
-      textColor: 'text-cyan-300',
+      hoverTextColor: 'group-hover:text-cyan-300',
+      arrowColor: 'text-cyan-300',
       action: () => { 
         setActiveTab('text'); 
         setCurrentPage('analyze-text'); 
@@ -51,9 +50,8 @@ const App: React.FC = () => {
       subtitle: 'IMAGE & SYNTHESIS',
       desc: '조작이 의심되는 이미지를 업로드하여 CNN+ViT 하이브리드 모델로 픽셀 왜곡을 탐지합니다.',
       icon: ImageIcon,
-      badgeBg: 'bg-white/10 text-fuchsia-300 border-white/20',
-      hoverBorder: 'hover:border-fuchsia-400/50 hover:shadow-[0_8px_32px_rgba(217,70,239,0.25)]',
-      textColor: 'text-fuchsia-300',
+      hoverTextColor: 'group-hover:text-fuchsia-300',
+      arrowColor: 'text-fuchsia-300',
       action: () => { 
         setActiveTab('image'); 
         setCurrentPage('analyze-image'); 
@@ -65,9 +63,8 @@ const App: React.FC = () => {
       subtitle: 'VIDEO & DEEPFAKE',
       desc: '딥페이크 영상이나 조작 파일을 업로드하여 3D-CNN 모델로 시공간 일관성을 정밀 분석합니다.',
       icon: Film,
-      badgeBg: 'bg-white/10 text-rose-300 border-white/20',
-      hoverBorder: 'hover:border-rose-400/50 hover:shadow-[0_8px_32px_rgba(244,63,94,0.25)]',
-      textColor: 'text-rose-300',
+      hoverTextColor: 'group-hover:text-rose-300',
+      arrowColor: 'text-rose-300',
       action: () => { 
         setActiveTab('video'); 
         setCurrentPage('analyze-video'); 
@@ -223,16 +220,16 @@ const App: React.FC = () => {
             <section className="w-full relative min-h-[calc(100vh-96px)] pt-24 pb-12 flex flex-col items-center justify-center text-center overflow-hidden">
               {/* Static Background Layer (Fixed image with default blue filter overlay) */}
               <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none bg-slate-950">
-                {/* 1. Static Background Image */}
+                {/* 1. Static Background Image (Pre-blurred WebP for optimal rendering) */}
                 <img 
                   src={titleBgImage} 
                   alt="Title Background" 
-                  className="w-full h-full object-cover absolute inset-0 blur-[6px] scale-[1.35] opacity-80"
+                  className="w-full h-full object-cover absolute inset-0 opacity-80 will-change-transform transform-gpu"
                 />
                 {/* 2. Default Blue Filter & Tint Overlay */}
                 <div className="absolute inset-0 w-full h-full bg-blue-600/40 mix-blend-color" />
-                {/* 3. Dimming & Contrast overlay for perfect text readability */}
-                <div className="absolute inset-0 w-full h-full bg-slate-950/65 backdrop-blur-[2px]" />
+                {/* 3. Dimming & Contrast overlay for perfect text readability (No backdrop-blur needed since WebP is pre-blurred) */}
+                <div className="absolute inset-0 w-full h-full bg-slate-950/70" />
               </div>
 
               {/* Title Content */}
@@ -258,25 +255,31 @@ const App: React.FC = () => {
               </motion.div>
 
               {/* 3-Column Minimalist Verification Navigation Grid */}
-              <div className="w-full max-w-5xl mx-auto px-4 md:px-8 z-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-center justify-center">
+              <div className="w-full max-w-3xl mx-auto px-4 md:px-8 z-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center justify-center">
                   {portalItems.map((item) => (
                     <div key={item.id} className="flex items-center justify-center p-4">
                       <motion.div
-                        whileHover={{ y: -6, scale: 1.05 }}
+                        whileHover={{ y: -6 }}
                         whileTap={{ scale: 0.96 }}
                         onClick={item.action}
-                        className="w-48 h-48 md:w-56 md:h-56 rounded-full flex flex-col items-center justify-center gap-4 cursor-pointer group transition-all duration-500 border border-transparent hover:border-white/40 hover:bg-white/10 hover:backdrop-blur-md hover:shadow-[0_10px_40px_rgba(255,255,255,0.2)]"
+                        className="w-48 h-40 md:w-52 md:h-44 flex flex-col items-center justify-center gap-5 cursor-pointer group transition-all duration-300"
                       >
                         {/* Pure Floating Icon (No border or box by default) */}
                         <div className="flex items-center justify-center transition-transform duration-300 group-hover:scale-110 drop-shadow-lg">
                           <item.icon size={56} className="text-white drop-shadow-md" />
                         </div>
                         
-                        {/* Minimalist Title (Reduced font size) */}
-                        <h3 className="text-lg md:text-xl font-bold text-white tracking-wide group-hover:text-cyan-300 transition-colors drop-shadow-md">
-                          {item.title}
-                        </h3>
+                        {/* Title with Arrow effect on Hover */}
+                        <div className="flex items-center gap-1.5 transition-transform duration-300 group-hover:scale-105">
+                          <h3 className={`text-lg md:text-xl font-bold text-white tracking-wide transition-colors duration-300 drop-shadow-md ${item.hoverTextColor}`}>
+                            {item.title}
+                          </h3>
+                          <ArrowRight 
+                            size={18} 
+                            className={`opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out drop-shadow-md ${item.arrowColor}`} 
+                          />
+                        </div>
                       </motion.div>
                     </div>
                   ))}
