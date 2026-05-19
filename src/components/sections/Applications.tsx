@@ -18,24 +18,17 @@ const showcaseItems = [
     bgImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    title: "공공·정부",
-    headline: "국가적 허위 정보 및 딥페이크 대응",
-    subheadline: "PUBLIC SECTOR & OFFICIAL DB",
-    desc: "korea.kr 등 정부 공식 브리핑 DB와 연동하여 국가 안보와 사회적 혼란을 야기하는 조작을 차단합니다.",
+    title: "소셜 미디어",
+    headline: "SNS 및 커뮤니티 정보의 진위 확인",
+    subheadline: "SOCIAL MEDIA & COMMUNITY",
+    desc: "SNS상의 가짜 뉴스나 커뮤니티에 변조되어 올라온 '짤방', 낚시성 게시글의 진위를 신속하게 파악합니다.",
     bgImage: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    title: "엔터·SNS",
-    headline: "유명인 사칭 및 초상권 완벽 보호",
-    subheadline: "CELEBRITY & SOCIAL MEDIA",
-    desc: "유명인 사칭 딥페이크 사기 및 불법 합성물을 실시간으로 탐지하여 개인과 브랜드의 명예를 지킵니다.",
-    bgImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80",
-  },
-  {
-    title: "기업 보안",
-    headline: "전용 SaaS 및 API/SDK 솔루션",
-    subheadline: "ENTERPRISE B2B INTEGRATION",
-    desc: "기업 내부망 및 기존 서비스에 TruthLens의 강력한 AI 검증 엔진을 손쉽게 연동할 수 있습니다.",
+    title: "디지털 창작",
+    headline: "AI 생성 콘텐츠 및 저작권 보호",
+    subheadline: "CREATIVE MEDIA & AI CONTENT",
+    desc: "생성형 AI로 만든 이미지인지 확인하고, 창작물의 출처와 변조 여부를 투명하게 관리하여 저작권을 보호합니다.",
     bgImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&auto=format&fit=crop&q=80",
   }
 ];
@@ -46,7 +39,26 @@ const Applications: React.FC = () => {
   return (
     <>
       {/* --- TruthLens 적용 분야 및 서비스 영역 (Interactive Expanding Accordion Showcase) --- */}
-      <section id="applications" className="w-full bg-slate-950 overflow-hidden">
+      <section id="applications" className="w-full bg-white overflow-hidden">
+        {/* Section Heading Area - Height adjusted and background matched to parent white */}
+        <div id="applications-title" className="px-[10%] md:px-[20%] pt-[25px] pb-[21px]">
+          <ScrollReveal>
+            <div className="flex flex-row items-center justify-between gap-6">
+              <div className="flex flex-col gap-1">
+                <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-slate-200 border border-slate-300 text-slate-600 font-bold text-[9px] tracking-widest uppercase w-fit">
+                  Industry Applications
+                </div>
+                <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight">
+                  다양한 산업 분야의 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">진실</span>을 수호합니다.
+                </h2>
+              </div>
+              <div className="hidden md:block text-slate-400 text-xs font-medium">
+                각 항목을 클릭하여 상세 내용을 확인하세요
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+
         {/* Expanding Accordion Container */}
         <div className="w-full h-[710px] md:h-[960px] flex flex-col md:flex-row overflow-hidden bg-slate-950">
           {showcaseItems.map((item, idx) => {
@@ -111,24 +123,6 @@ const Applications: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
-      </section>
-
-      {/* --- 5. 브랜드 강조 Quote --- */}
-      <section className="w-full py-20 px-[20%] bg-[#F8FAFC]">
-        <div className="w-full">
-          <ScrollReveal>
-            <div className="border-2 border-brand/20 bg-gradient-to-b from-slate-900 to-slate-950 text-white rounded-[36px] p-12 md:p-16 relative shadow-2xl overflow-hidden text-center">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
-              <div className="text-brand/40 text-8xl font-serif leading-none absolute top-6 left-12 select-none pointer-events-none">“</div>
-              <p className="text-xl md:text-3xl font-bold text-white leading-relaxed mb-8 relative z-10 max-w-2xl mx-auto">
-                복잡한 팩트체크 과정 전에 한 번 돌려보기에 딱 좋아요.<br />
-                내가 본 시각 정보가 조작되었는지 바로 알 수 있거든요.
-              </p>
-              <div className="w-12 h-0.5 bg-brand mx-auto mb-6 relative z-10"></div>
-              <p className="text-brand-light font-bold text-lg relative z-10">- 20대 대학생 체험단 후기</p>
-            </div>
-          </ScrollReveal>
         </div>
       </section>
     </>

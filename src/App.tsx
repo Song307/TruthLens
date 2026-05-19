@@ -21,7 +21,13 @@ const FAQ = lazy(() => import('./components/sections/FAQ'));
 
 const App: React.FC = () => {
   // 현재 SPA 페이지 상태
-  const [currentPage, setCurrentPage] = useState<'main' | 'analyze-text' | 'analyze-image' | 'analyze-video'>('main');
+  const [currentPage, setCurrentPage] = React.useState<'main' | 'analyze-text' | 'analyze-image' | 'analyze-video'>('main');
+
+  React.useLayoutEffect(() => {
+    if (currentPage !== 'main') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentPage]);
 
   // 포털 아이템 정의
   const portalItems = [
@@ -34,7 +40,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-cyan-300 border-white/20',
       hoverBorder: 'hover:border-cyan-400/50 hover:shadow-[0_8px_32px_rgba(6,182,212,0.25)]',
       textColor: 'text-cyan-300',
-      action: () => { setActiveTab('text'); setCurrentPage('analyze-text'); }
+      action: () => { 
+        setActiveTab('text'); 
+        setCurrentPage('analyze-text'); 
+      }
     },
     {
       id: 'image',
@@ -45,7 +54,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-fuchsia-300 border-white/20',
       hoverBorder: 'hover:border-fuchsia-400/50 hover:shadow-[0_8px_32px_rgba(217,70,239,0.25)]',
       textColor: 'text-fuchsia-300',
-      action: () => { setActiveTab('image'); setCurrentPage('analyze-image'); }
+      action: () => { 
+        setActiveTab('image'); 
+        setCurrentPage('analyze-image'); 
+      }
     },
     {
       id: 'video',
@@ -56,7 +68,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-rose-300 border-white/20',
       hoverBorder: 'hover:border-rose-400/50 hover:shadow-[0_8px_32px_rgba(244,63,94,0.25)]',
       textColor: 'text-rose-300',
-      action: () => { setActiveTab('video'); setCurrentPage('analyze-video'); }
+      action: () => { 
+        setActiveTab('video'); 
+        setCurrentPage('analyze-video'); 
+      }
     }
   ];
 
@@ -78,9 +93,16 @@ const App: React.FC = () => {
   const stickyHeaderRef = useRef<HTMLDivElement>(null);
 
   const scrollToStickyHeader = () => {
-    if (stickyHeaderRef.current) {
-      const topOffset = stickyHeaderRef.current.offsetTop;
-      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    const stickyElement = document.getElementById('sticky-header');
+    if (stickyElement) {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const elementRect = stickyElement.getBoundingClientRect();
+      const absoluteTop = elementRect.top + scrollY;
+
+      window.scrollTo({
+        top: absoluteTop,
+        behavior: 'smooth'
+      });
     } else {
       window.scrollTo({ top: window.innerHeight * 0.75, behavior: 'smooth' });
     }
@@ -152,19 +174,52 @@ const App: React.FC = () => {
         currentPage={currentPage} 
         onNavigate={(page, subSection) => {
           setCurrentPage(page);
+          
+          if (page !== 'main') {
+            window.scrollTo({ top: 0});
+            return;
+          }
+
           if (subSection) {
-            setActiveInfoSection(subSection);
+            // Only update activeInfoSection if moving between internal tabs (market-need, limitations, core-tech)
+            const isInternalTab = ['market-need', 'limitations', 'core-tech'].includes(subSection);
+            if (isInternalTab) {
+              setActiveInfoSection(subSection);
+            }
+            
+            // Wait for potential layout changes and force scroll to target
             setTimeout(() => {
-              scrollToStickyHeader();
-            }, 50);
+              const targetId = subSection === 'applications' ? 'applications' : (subSection === 'faq' ? 'faq' : 'sticky-header');
+              const targetElement = document.getElementById(targetId);
+              
+              if (targetElement) {
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const elementRect = targetElement.getBoundingClientRect();
+                const absoluteTop = elementRect.top + scrollY;
+                
+                window.scrollTo({
+                  top: absoluteTop,
+                  behavior: 'smooth'
+                });
+              }
+            }, 300);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }} 
       />
 
-      <main className="flex-grow w-full">
-        {currentPage === 'main' ? (
-          <>
-            {/* --- 1. Centered Hero Section + Portal Buttons --- */}
+      <main className="flex-grow w-full flex flex-col">
+        <AnimatePresence mode="wait">
+          {currentPage === 'main' ? (
+            <motion.div
+              key="main-page"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              {/* --- 1. Centered Hero Section + Portal Buttons --- */}
             <section className="w-full relative min-h-[calc(100vh-96px)] pt-24 pb-12 flex flex-col items-center justify-center text-center overflow-hidden">
               {/* Static Background Layer (Fixed image with default blue filter overlay) */}
               <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none bg-slate-950">
@@ -229,224 +284,286 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            {/* --- Sticky Section Header Framework (Tab Navigation Bar) --- */}
-            <div ref={stickyHeaderRef} className="sticky top-0 z-40 w-full h-24 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all px-[10%] md:px-[20%] flex items-center justify-start overflow-x-auto scrollbar-none">
-              <div className="flex items-center gap-8 md:gap-12 text-base md:text-lg font-bold text-slate-400 tracking-tight whitespace-nowrap">
-                {[
-                  { id: 'market-need', label: '문제의 심각성' },
-                  { id: 'limitations', label: '기존 서비스 한계' },
-                  { id: 'core-tech', label: '핵심 기술' },
-                  { id: 'applications', label: '적용 분야' },
-                  { id: 'faq', label: '자주 묻는 질문' },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => {
-                      setActiveInfoSection(tab.id);
-                      scrollToStickyHeader();
-                    }}
-                    className={`py-2 border-b-2 font-black transition-all cursor-pointer ${
-                      activeInfoSection === tab.id
-                        ? 'text-slate-900 border-slate-900 scale-105'
-                        : 'border-transparent hover:text-slate-600 hover:border-slate-300'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+            {/* --- Info Sub-Section Wrapper (Container for Sticky Header) --- */}
+            <div className="relative w-full">
+              {/* --- Sticky Section Header Framework (Tab Navigation Bar) --- */}
+              <div id="sticky-header" ref={stickyHeaderRef} className="sticky top-0 z-40 w-full h-24 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all px-[10%] md:px-[20%] flex items-center justify-start overflow-x-auto scrollbar-none">
+                <div className="flex items-center gap-8 md:gap-12 text-base md:text-lg font-bold text-slate-400 tracking-tight whitespace-nowrap">
+                  {[
+                    { id: 'market-need', label: '문제의 심각성' },
+                    { id: 'limitations', label: '기존 서비스 한계' },
+                    { id: 'core-tech', label: '핵심 기술' },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveInfoSection(tab.id);
+                        scrollToStickyHeader();
+                      }}
+                      className={`py-2 border-b-2 font-black transition-all cursor-pointer ${
+                        activeInfoSection === tab.id
+                          ? 'text-slate-900 border-slate-900 scale-105'
+                          : 'border-transparent hover:text-slate-600 hover:border-slate-300'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* --- Dynamic Info Sub-Section Display --- */}
+              <div className="w-full min-h-screen bg-white">
+                <Suspense fallback={
+                  <div className="w-full h-screen flex items-center justify-center bg-white">
+                    <Loader2 className="animate-spin text-brand" size={48} />
+                  </div>
+                }>
+                  <AnimatePresence mode="wait">
+                    {activeInfoSection === 'market-need' && (
+                      <motion.div
+                        key="market-need"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="min-h-screen"
+                      >
+                        <MarketNeed />
+                      </motion.div>
+                    )}
+
+                    {activeInfoSection === 'limitations' && (
+                      <motion.div
+                        key="limitations"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="min-h-screen"
+                      >
+                        <Limitations />
+                      </motion.div>
+                    )}
+
+                    {activeInfoSection === 'core-tech' && (
+                      <motion.div
+                        key="core-tech"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="min-h-screen"
+                      >
+                        <CoreTech />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Suspense>
               </div>
             </div>
 
-            {/* --- Dynamic Info Sub-Section Display --- */}
-            <div className="w-full min-h-[60vh] bg-white">
-              <Suspense fallback={
-                <div className="w-full min-h-[60vh] flex items-center justify-center">
-                  <Loader2 className="animate-spin text-brand" size={48} />
-                </div>
-              }>
-                <AnimatePresence mode="wait">
-                  {activeInfoSection === 'market-need' && (
-                    <motion.div
-                      key="market-need"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <MarketNeed />
-                    </motion.div>
-                  )}
-
-                  {activeInfoSection === 'limitations' && (
-                    <motion.div
-                      key="limitations"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Limitations />
-                    </motion.div>
-                  )}
-
-                  {activeInfoSection === 'core-tech' && (
-                    <motion.div
-                      key="core-tech"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CoreTech />
-                    </motion.div>
-                  )}
-
-                  {activeInfoSection === 'applications' && (
-                    <motion.div
-                      key="applications"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Applications />
-                    </motion.div>
-                  )}
-
-                  {activeInfoSection === 'faq' && (
-                    <motion.div
-                      key="faq"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <FAQ />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+            {/* --- Static Content below Dynamic Tabs (Moved outside the sticky container) --- */}
+            <div className="w-full bg-white">
+              <Suspense fallback={null}>
+                <Applications />
+                <FAQ onAnalyzeStart={() => {
+                   setActiveTab('text');
+                   setCurrentPage('analyze-text');
+                }} />
               </Suspense>
             </div>
-          </>
+          </motion.div>
         ) : (
           /* Dedicated Analysis Page Container */
-          <div className="w-full px-[20%] py-12 animate-in fade-in duration-300 min-h-[70vh]">
-            {/* Back to Main Button */}
-            <button 
-              onClick={() => setCurrentPage('main')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50 transition-all font-bold text-sm mb-8 shadow-sm cursor-pointer"
-            >
-              <ArrowLeft size={18} /> 메인 페이지로 돌아가기
-            </button>
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="w-full px-[10%] md:px-[20%] pt-20 pb-16 bg-white relative overflow-hidden flex flex-col justify-center flex-grow"
+          >
+            {/* Background Light Effects (Softened for Light Mode) */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-            {/* Page Header & Uploader Box */}
-            <div className="bg-white rounded-[36px] p-8 md:p-12 border border-slate-200 shadow-xl mb-12">
-              <div className="max-w-3xl">
-                {currentPage === 'analyze-text' && (
-                  <>
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-brand font-bold text-xs mb-4">
-                      <MessageSquareText size={16} /> ARTICLE & TEXT VERIFICATION
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">뉴스 기사 및 텍스트 AI 검증</h1>
-                    <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed mb-8">
-                      의심되는 뉴스 기사의 URL 주소를 입력해주세요. TruthLens AI가 실시간으로 RAG 기반 공공 DB 및 신뢰할 수 있는 언론사 보도망과 대조하여 팩트체크를 진행합니다.
-                    </p>
+            {/* Page Header Area */}
+            <div className="max-w-4xl mb-8 relative z-10">
+              {currentPage === 'analyze-text' && (
+                <>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-600 font-bold text-xs mb-6 tracking-widest uppercase"
+                  >
+                    <MessageSquareText size={16} /> ARTICLE & TEXT VERIFICATION
+                  </motion.div>
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+                    진실을 가리는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">텍스트 데이터</span> 분석
+                  </h1>
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                    의심되는 뉴스 URL이나 문장을 입력하세요. TruthLens AI가 실시간으로 수억 개의 데이터셋과 대조하여 사실 여부를 확인합니다.
+                  </p>
+                </>
+              )}
 
-                    {/* Input Box */}
-                    <div className="relative flex items-center mb-6">
-                      <input
-                        type="text"
-                        className="w-full p-5 pr-32 rounded-2xl border border-slate-300 bg-slate-50 focus:bg-white shadow-inner focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all text-lg text-slate-900 placeholder-slate-400 font-medium"
-                        placeholder="URL을 붙여넣기 해주세요 (예: https://news.naver.com/...)"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                      />
-                      <button
-                        onClick={handleTextAnalyze}
-                        disabled={loading}
-                        className="absolute right-2.5 px-6 py-3.5 bg-brand text-white rounded-xl hover:bg-blue-700 active:scale-95 disabled:bg-slate-200 disabled:text-slate-400 transition-all shadow-md flex items-center gap-2 font-bold text-base cursor-pointer"
-                      >
-                        {loading ? <Loader2 className="animate-spin" size={20} /> : <><ArrowRight size={20} /><span>검증하기</span></>}
-                      </button>
-                    </div>
-                  </>
-                )}
+              {currentPage === 'analyze-image' && (
+                <>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-fuchsia-50 border border-fuchsia-100 text-fuchsia-600 font-bold text-xs mb-6 tracking-widest uppercase"
+                  >
+                    <ImageIcon size={16} /> IMAGE & SYNTHESIS VERIFICATION
+                  </motion.div>
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+                    픽셀 단위의 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-purple-600">조작 흔적</span> 추적
+                  </h1>
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                    이미지를 업로드하여 위변조 여부를 확인하세요. 육안으로 식별 불가능한 미세한 노이즈와 아티팩트를 AI가 잡아냅니다.
+                  </p>
+                </>
+              )}
 
-                {currentPage === 'analyze-image' && (
-                  <>
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-50 border border-purple-200 text-purple-600 font-bold text-xs mb-4">
-                      <ImageIcon size={16} /> IMAGE & SYNTHESIS VERIFICATION
+              {currentPage === 'analyze-video' && (
+                <>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 border border-rose-100 text-rose-600 font-bold text-xs mb-6 tracking-widest uppercase"
+                  >
+                    <Film size={16} /> VIDEO & DEEPFAKE VERIFICATION
+                  </motion.div>
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+                    딥페이크 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-orange-600">시공간 일관성</span> 분석
+                  </h1>
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                    프레임 간의 미세한 떨림과 부자연스러운 움직임을 탐지합니다. 최첨단 3D-CNN 모델이 영상의 진위를 정밀 판별합니다.
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Analysis Box */}
+            <div className="relative z-10">
+              <div className="bg-white rounded-[32px] p-6 md:p-10 border border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all overflow-hidden group">
+                {/* Decorative glow */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-slate-50 rounded-full blur-3xl transition-all group-hover:bg-slate-100" />
+                
+                <div className="relative z-10">
+                  {currentPage === 'analyze-text' && (
+                    <div className="space-y-6">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          className="w-full p-6 pr-40 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-cyan-500/50 shadow-sm focus:ring-4 focus:ring-cyan-500/5 outline-none transition-all text-xl text-slate-900 placeholder-slate-400 font-medium"
+                          placeholder="URL을 입력하거나 문장을 붙여넣으세요..."
+                          value={url}
+                          onChange={(e) => setUrl(e.target.value)}
+                        />
+                        <button
+                          onClick={handleTextAnalyze}
+                          disabled={loading}
+                          className="absolute right-3 top-3 bottom-3 px-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 active:scale-95 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-500 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center gap-2 font-bold text-lg cursor-pointer"
+                        >
+                          {loading ? <Loader2 className="animate-spin" size={24} /> : <><ArrowRight size={24} /><span>분석</span></>}
+                        </button>
+                      </div>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">이미지 조작 및 합성 AI 검증</h1>
-                    <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed mb-8">
-                      조작이나 딥페이크 합성이 의심되는 이미지를 업로드해주세요. CNN과 ViT 하이브리드 탐지 엔진이 픽셀 단위의 미세한 왜곡과 전체 맥락을 분석합니다.
-                    </p>
+                  )}
+
+                  {currentPage === 'analyze-image' && (
                     <MediaUploader onAnalyze={handleImageAnalyze} loading={loading} fileType="image" />
-                  </>
-                )}
+                  )}
 
-                {currentPage === 'analyze-video' && (
-                  <>
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 font-bold text-xs mb-4">
-                      <Film size={16} /> VIDEO & DEEPFAKE VERIFICATION
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">동영상 및 딥페이크 AI 검증</h1>
-                    <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed mb-8">
-                      딥페이크 조작이 의심되는 동영상 파일을 업로드해주세요. 3D-CNN 시공간 일관성 분석 모델이 프레임 간의 흐름과 부자연스러움을 정밀 탐지합니다.
-                    </p>
+                  {currentPage === 'analyze-video' && (
                     <VideoUploader onAnalyze={handleVideoAnalyze} loading={loading} />
-                  </>
-                )}
+                  )}
 
-                {loading && (
-                  <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl animate-in fade-in duration-300 mt-6">
-                    <p className="text-base text-brand text-center font-bold flex items-center justify-center gap-3">
-                      <Loader2 className="animate-spin" size={24} /> AI 보안 엔진이 실시간으로 교차 검증 및 정밀 분석을 진행 중입니다...
-                    </p>
-                  </div>
-                )}
+                  {loading && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-8 p-6 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex flex-col items-center justify-center gap-4"
+                    >
+                      <div className="flex items-center gap-3 text-cyan-400 font-bold text-lg">
+                        <Loader2 className="animate-spin" size={28} />
+                        AI 엔진이 정밀 분석을 수행 중입니다...
+                      </div>
+                      <div className="w-full max-w-md bg-white/5 h-1.5 rounded-full overflow-hidden">
+                        <motion.div 
+                          className="h-full bg-cyan-500"
+                          animate={{ x: ["-100%", "100%"] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Results Section */}
-            {currentPage === 'analyze-text' && textResult && (
-              <ScrollReveal>
-                <div className="bg-white rounded-[36px] p-8 md:p-12 shadow-[0_20px_50px_rgb(0,0,0,0.08)] border border-slate-200/80 mb-12">
-                  <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight flex-1">{textResult.title}</h2>
-                    <div className={`px-5 py-2.5 rounded-full font-bold text-lg border whitespace-nowrap ${
-                      textResult.verdict === '진실' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
-                      textResult.verdict === '거짓' ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-amber-50 text-amber-600 border-amber-200'
-                    }`}>
-                      {textResult.verdict}
+            {/* Results Display Area */}
+            <div className="mt-12 relative z-10">
+              {currentPage === 'analyze-text' && textResult && (
+                <ScrollReveal>
+                  <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
+                      <div className="flex-1">
+                        <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-4">{textResult.title}</h2>
+                        <div className="flex items-center gap-4 text-slate-500 font-medium">
+                          <span className="flex items-center gap-1.5"><Sparkles size={16} className="text-cyan-600" /> 분석 완료</span>
+                          <span className="w-1 h-1 bg-slate-300 rounded-full" />
+                          <span>RAG 기반 교차 검증</span>
+                        </div>
+                      </div>
+                      <div className={`px-8 py-4 rounded-3xl font-black text-2xl border ${
+                        textResult.verdict === '진실' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
+                        textResult.verdict === '거짓' ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-amber-50 text-amber-600 border-amber-200'
+                      }`}>
+                        {textResult.verdict}
+                      </div>
                     </div>
+                    
+                    <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden group shadow-sm">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl rounded-full" />
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-6">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">신뢰도 점수 (Truth Score)</span>
+                          <span className="text-slate-900 font-black text-4xl">{textResult.score} <span className="text-slate-400 text-2xl font-medium">/ 100</span></span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${textResult.score}%` }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className={`h-full rounded-full bg-gradient-to-r ${
+                              textResult.score >= 70 ? 'from-emerald-500 to-cyan-500' : 
+                              textResult.score >= 40 ? 'from-amber-500 to-orange-500' : 
+                              'from-rose-500 to-red-600'
+                            }`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="max-w-none">
+                      <p className="text-slate-800 leading-relaxed text-xl md:text-2xl mb-12 font-medium bg-white p-8 rounded-3xl border-l-4 border-cyan-500 shadow-sm">
+                        {textResult.summary}
+                      </p>
+                    </div>
+
+                    <ResultDetails data={textResult} />
                   </div>
-                  
-                  <div className="mb-10 bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-200/60">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-slate-600 font-bold uppercase tracking-wider text-sm md:text-base">신뢰도 점수 (Truth Score)</span>
-                      <span className="text-slate-900 font-black text-3xl">{textResult.score} <span className="text-slate-400 text-xl font-medium">/ 100</span></span>
-                    </div>
-                    <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-brand transition-all duration-1000 ease-out" 
-                        style={{ width: `${textResult.score}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <p className="text-slate-700 leading-relaxed text-lg md:text-xl mb-10 font-medium">
-                    {textResult.summary}
-                  </p>
-                  <ResultDetails data={textResult} />
-                </div>
-              </ScrollReveal>
-            )}
+                </ScrollReveal>
+              )}
 
             {currentPage === 'analyze-image' && mediaResult && (
               <ScrollReveal>
-                <div className="bg-white rounded-[36px] p-8 md:p-12 shadow-[0_20px_50px_rgb(0,0,0,0.08)] border border-slate-200/80 mb-12">
-                  <h3 className="text-2xl md:text-3xl font-black mb-8 text-slate-900 flex items-center gap-3">
-                    <ImageIcon className="text-brand" size={32} /> 이미지 분석 결과
+                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
+                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
+                    <ImageIcon className="text-fuchsia-600" size={40} /> 이미지 정밀 분석 결과
                   </h3>
                   <MediaResult data={mediaResult} />
                 </div>
@@ -455,23 +572,25 @@ const App: React.FC = () => {
 
             {currentPage === 'analyze-video' && videoResult && (
               <ScrollReveal>
-                <div className="bg-white rounded-[36px] p-8 md:p-12 shadow-[0_20px_50px_rgb(0,0,0,0.08)] border border-slate-200/80 mb-12">
-                  <h3 className="text-2xl md:text-3xl font-black mb-8 text-slate-900 flex items-center gap-3">
-                    <Film className="text-brand" size={32} /> 동영상 분석 결과
+                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
+                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
+                    <Film className="text-rose-600" size={40} /> 동영상 딥페이크 분석 결과
                   </h3>
                   
-                  <div className="mb-10 bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-200/60">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-slate-600 font-bold uppercase tracking-wider text-sm md:text-base">조작 감지 확률</span>
-                      <span className="text-rose-500 font-black text-3xl">
-                        {Math.round(videoResult.overall_probability * 100)}%
+                  <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">최종 조작 감지 확률</span>
+                      <span className="text-rose-600 font-black text-4xl">
+                        {(videoResult.overall_probability).toFixed(2)}%
                       </span>
                     </div>
-                    <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-rose-500 transition-all duration-1000 ease-out" 
-                        style={{ width: `${videoResult.overall_probability * 100}%` }}
-                      ></div>
+                    <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${videoResult.overall_probability * 100}%` }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600"
+                      />
                     </div>
                   </div>
                   
@@ -479,8 +598,10 @@ const App: React.FC = () => {
                 </div>
               </ScrollReveal>
             )}
-          </div>
+            </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </main>
 
       <Footer />

@@ -87,20 +87,7 @@ const MarketNeed: React.FC = () => {
       <div className="relative z-10 -mt-[100vh]">
         
         {/* Top Section Header */}
-        <div className="w-full px-[20%] pt-20 mb-12">
-          <ScrollReveal>
-            <div className="text-left max-w-4xl">
-              <div className="inline-block px-4 py-1.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-full text-xs font-bold mb-4 tracking-wider">
-                MARKET THREAT
-              </div>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                설문조사로 본 문제의 심각성
-              </h2>
-              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
-                아래 조사 결과는 가짜뉴스·딥페이크 문제가 이미 전 국민적 과제임을 명확히 보여줍니다.
-              </p>
-            </div>
-          </ScrollReveal>
+        <div className="w-full px-[20%] pt-20">
         </div>
 
         {/* 4 Vertical Sections Stacked */}
@@ -172,7 +159,7 @@ const MarketNeed: React.FC = () => {
         </div>
 
         {/* Bottom Footer Source Credit */}
-        <div className="w-full px-[20%] border-t border-slate-100 pt-6 pb-12">
+        <div className="w-full px-[20%] pt-6 pb-12">
           <p className="text-xs md:text-sm text-slate-400 font-medium leading-relaxed text-center md:text-left">
             출처: 한국언론진흥재단(KPF), 딥페이크 관련 인식 조사 (2024) / 로이터 저널리즘 연구소 & 한국언론진흥재단, 디지털 뉴스 리포트 (2023/2024) / 방송통신위원회 & KISDI, 지능정보사회 이용자 패널조사 (2023/2024)
           </p>
