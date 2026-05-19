@@ -364,19 +364,11 @@ const App: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="w-full px-[10%] md:px-[20%] pt-28 pb-12 min-h-[70vh] bg-white relative overflow-hidden"
+            className="w-full px-[10%] md:px-[20%] pt-28 pb-12 min-h-screen bg-white relative overflow-hidden flex flex-col"
           >
             {/* Background Light Effects (Softened for Light Mode) */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
-
-            {/* Back to Main Button */}
-            <button 
-              onClick={() => setCurrentPage('main')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-100 transition-all font-bold text-sm mb-12 shadow-sm cursor-pointer z-10 relative"
-            >
-              <ArrowLeft size={18} /> 메인 페이지로 돌아가기
-            </button>
 
             {/* Page Header Area */}
             <div className="max-w-4xl mb-12 relative z-10">
