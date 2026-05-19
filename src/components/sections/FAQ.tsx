@@ -4,7 +4,7 @@ import ScrollReveal from '../ScrollReveal';
 
 const FAQ: React.FC = () => {
   return (
-    <section id="faq" className="w-full py-20 bg-white border-t border-slate-100">
+    <section id="faq" className="w-full min-h-[calc(100vh-96px)] py-20 bg-white border-t border-slate-100 flex items-center">
       <div className="w-full px-[20%]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6 text-center lg:text-left">
