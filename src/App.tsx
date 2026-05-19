@@ -162,9 +162,16 @@ const App: React.FC = () => {
       />
 
       <main className="flex-grow w-full">
-        {currentPage === 'main' ? (
-          <>
-            {/* --- 1. Centered Hero Section + Portal Buttons --- */}
+        <AnimatePresence mode="wait">
+          {currentPage === 'main' ? (
+            <motion.div
+              key="main-page"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              {/* --- 1. Centered Hero Section + Portal Buttons --- */}
             <section className="w-full relative min-h-[calc(100vh-96px)] pt-24 pb-12 flex flex-col items-center justify-center text-center overflow-hidden">
               {/* Static Background Layer (Fixed image with default blue filter overlay) */}
               <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none bg-slate-950">
@@ -258,9 +265,9 @@ const App: React.FC = () => {
             </div>
 
             {/* --- Dynamic Info Sub-Section Display --- */}
-            <div className="w-full min-h-[60vh] bg-white">
+            <div className="w-full min-h-screen bg-white">
               <Suspense fallback={
-                <div className="w-full min-h-[60vh] flex items-center justify-center">
+                <div className="w-full h-screen flex items-center justify-center bg-white">
                   <Loader2 className="animate-spin text-brand" size={48} />
                 </div>
               }>
@@ -272,6 +279,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
+                      className="min-h-screen"
                     >
                       <MarketNeed />
                     </motion.div>
@@ -284,6 +292,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
+                      className="min-h-screen"
                     >
                       <Limitations />
                     </motion.div>
@@ -296,6 +305,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
+                      className="min-h-screen"
                     >
                       <CoreTech />
                     </motion.div>
@@ -308,6 +318,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
+                      className="min-h-screen"
                     >
                       <Applications />
                     </motion.div>
@@ -320,6 +331,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
+                      className="min-h-screen"
                     >
                       <FAQ />
                     </motion.div>
@@ -327,10 +339,17 @@ const App: React.FC = () => {
                 </AnimatePresence>
               </Suspense>
             </div>
-          </>
+          </motion.div>
         ) : (
           /* Dedicated Analysis Page Container */
-          <div className="w-full px-[20%] py-12 animate-in fade-in duration-300 min-h-[70vh]">
+          <motion.div
+            key="analysis-page"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="w-full px-[10%] md:px-[20%] pt-28 pb-12 min-h-[70vh]"
+          >
             {/* Back to Main Button */}
             <button 
               onClick={() => setCurrentPage('main')}
@@ -479,8 +498,9 @@ const App: React.FC = () => {
                 </div>
               </ScrollReveal>
             )}
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </main>
 
       <Footer />

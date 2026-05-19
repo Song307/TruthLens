@@ -87,20 +87,7 @@ const MarketNeed: React.FC = () => {
       <div className="relative z-10 -mt-[100vh]">
         
         {/* Top Section Header */}
-        <div className="w-full px-[20%] pt-20 mb-12">
-          <ScrollReveal>
-            <div className="text-left max-w-4xl">
-              <div className="inline-block px-4 py-1.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-full text-xs font-bold mb-4 tracking-wider">
-                MARKET THREAT
-              </div>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                설문조사로 본 문제의 심각성
-              </h2>
-              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
-                아래 조사 결과는 가짜뉴스·딥페이크 문제가 이미 전 국민적 과제임을 명확히 보여줍니다.
-              </p>
-            </div>
-          </ScrollReveal>
+        <div className="w-full px-[20%] pt-20">
         </div>
 
         {/* 4 Vertical Sections Stacked */}

@@ -53,8 +53,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
   // 2. !isAtTop && isVisible: floating bold glassmorphic pill, white text
   // 3. !isVisible: translate-y out of view
   const headerContainerClass = isAtTop
-    ? 'fixed top-0 left-0 w-full h-16 bg-transparent border-b border-transparent z-50 transition-all duration-500'
-    : `fixed left-[5%] w-[90%] md:left-[15%] md:w-[70%] h-16 rounded-full bg-slate-900/90 backdrop-blur-md border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 transition-all duration-500 ${
+    ? `fixed top-0 left-0 w-full h-16 ${currentPage === 'main' ? 'bg-transparent' : 'bg-slate-950'} border-b border-transparent z-50 transition-all duration-500`
+    : `fixed left-[5%] w-[90%] md:left-[15%] md:w-[70%] h-16 rounded-full ${currentPage === 'main' ? 'bg-slate-900/90' : 'bg-slate-950/90'} backdrop-blur-md border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 transition-all duration-500 ${
         isVisible ? 'top-4 opacity-100 translate-y-0' : '-top-20 opacity-0 -translate-y-full'
       }`;
 

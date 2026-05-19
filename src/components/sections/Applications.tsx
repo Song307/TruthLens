@@ -18,24 +18,17 @@ const showcaseItems = [
     bgImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    title: "공공·정부",
-    headline: "국가적 허위 정보 및 딥페이크 대응",
-    subheadline: "PUBLIC SECTOR & OFFICIAL DB",
-    desc: "korea.kr 등 정부 공식 브리핑 DB와 연동하여 국가 안보와 사회적 혼란을 야기하는 조작을 차단합니다.",
+    title: "소셜 미디어",
+    headline: "SNS 및 커뮤니티 정보의 진위 확인",
+    subheadline: "SOCIAL MEDIA & COMMUNITY",
+    desc: "SNS상의 가짜 뉴스나 커뮤니티에 변조되어 올라온 '짤방', 낚시성 게시글의 진위를 신속하게 파악합니다.",
     bgImage: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    title: "엔터·SNS",
-    headline: "유명인 사칭 및 초상권 완벽 보호",
-    subheadline: "CELEBRITY & SOCIAL MEDIA",
-    desc: "유명인 사칭 딥페이크 사기 및 불법 합성물을 실시간으로 탐지하여 개인과 브랜드의 명예를 지킵니다.",
-    bgImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80",
-  },
-  {
-    title: "기업 보안",
-    headline: "전용 SaaS 및 API/SDK 솔루션",
-    subheadline: "ENTERPRISE B2B INTEGRATION",
-    desc: "기업 내부망 및 기존 서비스에 TruthLens의 강력한 AI 검증 엔진을 손쉽게 연동할 수 있습니다.",
+    title: "디지털 창작",
+    headline: "AI 생성 콘텐츠 및 저작권 보호",
+    subheadline: "CREATIVE MEDIA & AI CONTENT",
+    desc: "생성형 AI로 만든 이미지인지 확인하고, 창작물의 출처와 변조 여부를 투명하게 관리하여 저작권을 보호합니다.",
     bgImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&auto=format&fit=crop&q=80",
   }
 ];
