@@ -39,7 +39,26 @@ const Applications: React.FC = () => {
   return (
     <>
       {/* --- TruthLens 적용 분야 및 서비스 영역 (Interactive Expanding Accordion Showcase) --- */}
-      <section id="applications" className="w-full bg-slate-950 overflow-hidden">
+      <section id="applications" className="w-full bg-white overflow-hidden">
+        {/* Section Heading Area - Height adjusted and background matched to parent white */}
+        <div id="applications-title" className="px-[10%] md:px-[20%] pt-[25px] pb-[21px]">
+          <ScrollReveal>
+            <div className="flex flex-row items-center justify-between gap-6">
+              <div className="flex flex-col gap-1">
+                <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-slate-200 border border-slate-300 text-slate-600 font-bold text-[9px] tracking-widest uppercase w-fit">
+                  Industry Applications
+                </div>
+                <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight">
+                  다양한 산업 분야의 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">진실</span>을 수호합니다.
+                </h2>
+              </div>
+              <div className="hidden md:block text-slate-400 text-xs font-medium">
+                각 항목을 클릭하여 상세 내용을 확인하세요
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+
         {/* Expanding Accordion Container */}
         <div className="w-full h-[710px] md:h-[960px] flex flex-col md:flex-row overflow-hidden bg-slate-950">
           {showcaseItems.map((item, idx) => {

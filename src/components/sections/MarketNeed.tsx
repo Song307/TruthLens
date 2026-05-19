@@ -159,7 +159,7 @@ const MarketNeed: React.FC = () => {
         </div>
 
         {/* Bottom Footer Source Credit */}
-        <div className="w-full px-[20%] border-t border-slate-100 pt-6 pb-12">
+        <div className="w-full px-[20%] pt-6 pb-12">
           <p className="text-xs md:text-sm text-slate-400 font-medium leading-relaxed text-center md:text-left">
             출처: 한국언론진흥재단(KPF), 딥페이크 관련 인식 조사 (2024) / 로이터 저널리즘 연구소 & 한국언론진흥재단, 디지털 뉴스 리포트 (2023/2024) / 방송통신위원회 & KISDI, 지능정보사회 이용자 패널조사 (2023/2024)
           </p>
