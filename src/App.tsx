@@ -21,7 +21,13 @@ const FAQ = lazy(() => import('./components/sections/FAQ'));
 
 const App: React.FC = () => {
   // 현재 SPA 페이지 상태
-  const [currentPage, setCurrentPage] = useState<'main' | 'analyze-text' | 'analyze-image' | 'analyze-video'>('main');
+  const [currentPage, setCurrentPage] = React.useState<'main' | 'analyze-text' | 'analyze-image' | 'analyze-video'>('main');
+
+  React.useLayoutEffect(() => {
+    if (currentPage !== 'main') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentPage]);
 
   // 포털 아이템 정의
   const portalItems = [
@@ -34,7 +40,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-cyan-300 border-white/20',
       hoverBorder: 'hover:border-cyan-400/50 hover:shadow-[0_8px_32px_rgba(6,182,212,0.25)]',
       textColor: 'text-cyan-300',
-      action: () => { setActiveTab('text'); setCurrentPage('analyze-text'); }
+      action: () => { 
+        setActiveTab('text'); 
+        setCurrentPage('analyze-text'); 
+      }
     },
     {
       id: 'image',
@@ -45,7 +54,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-fuchsia-300 border-white/20',
       hoverBorder: 'hover:border-fuchsia-400/50 hover:shadow-[0_8px_32px_rgba(217,70,239,0.25)]',
       textColor: 'text-fuchsia-300',
-      action: () => { setActiveTab('image'); setCurrentPage('analyze-image'); }
+      action: () => { 
+        setActiveTab('image'); 
+        setCurrentPage('analyze-image'); 
+      }
     },
     {
       id: 'video',
@@ -56,7 +68,10 @@ const App: React.FC = () => {
       badgeBg: 'bg-white/10 text-rose-300 border-white/20',
       hoverBorder: 'hover:border-rose-400/50 hover:shadow-[0_8px_32px_rgba(244,63,94,0.25)]',
       textColor: 'text-rose-300',
-      action: () => { setActiveTab('video'); setCurrentPage('analyze-video'); }
+      action: () => { 
+        setActiveTab('video'); 
+        setCurrentPage('analyze-video'); 
+      }
     }
   ];
 
@@ -194,7 +209,7 @@ const App: React.FC = () => {
         }} 
       />
 
-      <main className="flex-grow w-full">
+      <main className="flex-grow w-full flex flex-col">
         <AnimatePresence mode="wait">
           {currentPage === 'main' ? (
             <motion.div
@@ -352,7 +367,10 @@ const App: React.FC = () => {
             <div className="w-full bg-white">
               <Suspense fallback={null}>
                 <Applications />
-                <FAQ />
+                <FAQ onAnalyzeStart={() => {
+                   setActiveTab('text');
+                   setCurrentPage('analyze-text');
+                }} />
               </Suspense>
             </div>
           </motion.div>
@@ -364,14 +382,14 @@ const App: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="w-full px-[10%] md:px-[20%] pt-28 pb-12 min-h-screen bg-white relative overflow-hidden flex flex-col"
+            className="w-full px-[10%] md:px-[20%] pt-20 pb-16 bg-white relative overflow-hidden flex flex-col justify-center flex-grow"
           >
             {/* Background Light Effects (Softened for Light Mode) */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
             {/* Page Header Area */}
-            <div className="max-w-4xl mb-12 relative z-10">
+            <div className="max-w-4xl mb-8 relative z-10">
               {currentPage === 'analyze-text' && (
                 <>
                   <motion.div 
@@ -381,10 +399,10 @@ const App: React.FC = () => {
                   >
                     <MessageSquareText size={16} /> ARTICLE & TEXT VERIFICATION
                   </motion.div>
-                  <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     진실을 가리는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">텍스트 데이터</span> 분석
                   </h1>
-                  <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
                     의심되는 뉴스 URL이나 문장을 입력하세요. TruthLens AI가 실시간으로 수억 개의 데이터셋과 대조하여 사실 여부를 확인합니다.
                   </p>
                 </>
@@ -399,10 +417,10 @@ const App: React.FC = () => {
                   >
                     <ImageIcon size={16} /> IMAGE & SYNTHESIS VERIFICATION
                   </motion.div>
-                  <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     픽셀 단위의 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-purple-600">조작 흔적</span> 추적
                   </h1>
-                  <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
                     이미지를 업로드하여 위변조 여부를 확인하세요. 육안으로 식별 불가능한 미세한 노이즈와 아티팩트를 AI가 잡아냅니다.
                   </p>
                 </>
@@ -417,10 +435,10 @@ const App: React.FC = () => {
                   >
                     <Film size={16} /> VIDEO & DEEPFAKE VERIFICATION
                   </motion.div>
-                  <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+                  <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     딥페이크 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-orange-600">시공간 일관성</span> 분석
                   </h1>
-                  <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
                     프레임 간의 미세한 떨림과 부자연스러운 움직임을 탐지합니다. 최첨단 3D-CNN 모델이 영상의 진위를 정밀 판별합니다.
                   </p>
                 </>
@@ -486,52 +504,52 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Results Display Area (Customizing for Dark Background) */}
+            {/* Results Display Area */}
             <div className="mt-12 relative z-10">
               {currentPage === 'analyze-text' && textResult && (
                 <ScrollReveal>
-                  <div className="bg-white/5 backdrop-blur-2xl rounded-[32px] p-8 md:p-12 shadow-2xl border border-white/10 mb-12">
+                  <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
                     <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
                       <div className="flex-1">
-                        <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4">{textResult.title}</h2>
-                        <div className="flex items-center gap-4 text-slate-400 font-medium">
-                          <span className="flex items-center gap-1.5"><Sparkles size={16} className="text-cyan-400" /> 분석 완료</span>
-                          <span className="w-1 h-1 bg-slate-600 rounded-full" />
+                        <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-4">{textResult.title}</h2>
+                        <div className="flex items-center gap-4 text-slate-500 font-medium">
+                          <span className="flex items-center gap-1.5"><Sparkles size={16} className="text-cyan-600" /> 분석 완료</span>
+                          <span className="w-1 h-1 bg-slate-300 rounded-full" />
                           <span>RAG 기반 교차 검증</span>
                         </div>
                       </div>
-                      <div className={`px-8 py-4 rounded-3xl font-black text-2xl border shadow-[0_0_30px_rgba(0,0,0,0.2)] ${
-                        textResult.verdict === '진실' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-400/20 shadow-emerald-500/10' : 
-                        textResult.verdict === '거짓' ? 'bg-rose-500/10 text-rose-400 border-rose-400/20 shadow-rose-500/10' : 'bg-amber-500/10 text-amber-400 border-amber-400/20 shadow-amber-500/10'
+                      <div className={`px-8 py-4 rounded-3xl font-black text-2xl border ${
+                        textResult.verdict === '진실' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
+                        textResult.verdict === '거짓' ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-amber-50 text-amber-600 border-amber-200'
                       }`}>
                         {textResult.verdict}
                       </div>
                     </div>
                     
-                    <div className="mb-12 bg-white/5 p-8 md:p-10 rounded-[28px] border border-white/5 relative overflow-hidden group">
+                    <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden group shadow-sm">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl rounded-full" />
                       <div className="relative z-10">
                         <div className="flex items-center justify-between mb-6">
-                          <span className="text-slate-400 font-bold uppercase tracking-widest text-sm">신뢰도 점수 (Truth Score)</span>
-                          <span className="text-white font-black text-4xl">{textResult.score} <span className="text-slate-500 text-2xl font-medium">/ 100</span></span>
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">신뢰도 점수 (Truth Score)</span>
+                          <span className="text-slate-900 font-black text-4xl">{textResult.score} <span className="text-slate-400 text-2xl font-medium">/ 100</span></span>
                         </div>
-                        <div className="w-full bg-white/5 h-5 rounded-full overflow-hidden border border-white/5 p-1">
+                        <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
                           <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${textResult.score}%` }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
                             className={`h-full rounded-full bg-gradient-to-r ${
-                              textResult.score >= 70 ? 'from-emerald-500 to-cyan-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 
-                              textResult.score >= 40 ? 'from-amber-500 to-orange-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 
-                              'from-rose-500 to-red-600 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
+                              textResult.score >= 70 ? 'from-emerald-500 to-cyan-500' : 
+                              textResult.score >= 40 ? 'from-amber-500 to-orange-500' : 
+                              'from-rose-500 to-red-600'
                             }`}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="prose prose-invert max-w-none">
-                      <p className="text-slate-200 leading-relaxed text-xl md:text-2xl mb-12 font-medium bg-white/5 p-8 rounded-3xl border-l-4 border-cyan-500">
+                    <div className="max-w-none">
+                      <p className="text-slate-800 leading-relaxed text-xl md:text-2xl mb-12 font-medium bg-white p-8 rounded-3xl border-l-4 border-cyan-500 shadow-sm">
                         {textResult.summary}
                       </p>
                     </div>
@@ -543,9 +561,9 @@ const App: React.FC = () => {
 
             {currentPage === 'analyze-image' && mediaResult && (
               <ScrollReveal>
-                <div className="bg-white/5 backdrop-blur-2xl rounded-[32px] p-8 md:p-12 shadow-2xl border border-white/10 mb-12">
-                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-white flex items-center gap-4">
-                    <ImageIcon className="text-fuchsia-400" size={40} /> 이미지 정밀 분석 결과
+                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
+                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
+                    <ImageIcon className="text-fuchsia-600" size={40} /> 이미지 정밀 분석 결과
                   </h3>
                   <MediaResult data={mediaResult} />
                 </div>
@@ -554,24 +572,24 @@ const App: React.FC = () => {
 
             {currentPage === 'analyze-video' && videoResult && (
               <ScrollReveal>
-                <div className="bg-white/5 backdrop-blur-2xl rounded-[32px] p-8 md:p-12 shadow-2xl border border-white/10 mb-12">
-                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-white flex items-center gap-4">
-                    <Film className="text-rose-400" size={40} /> 동영상 딥페이크 분석 결과
+                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
+                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
+                    <Film className="text-rose-600" size={40} /> 동영상 딥페이크 분석 결과
                   </h3>
                   
-                  <div className="mb-12 bg-white/5 p-8 md:p-10 rounded-[28px] border border-white/5 relative overflow-hidden">
+                  <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden shadow-sm">
                     <div className="flex items-center justify-between mb-6">
-                      <span className="text-slate-400 font-bold uppercase tracking-widest text-sm">최종 조작 감지 확률</span>
-                      <span className="text-rose-400 font-black text-4xl">
-                        {Math.round(videoResult.overall_probability * 100)}%
+                      <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">최종 조작 감지 확률</span>
+                      <span className="text-rose-600 font-black text-4xl">
+                        {(videoResult.overall_probability).toFixed(2)}%
                       </span>
                     </div>
-                    <div className="w-full bg-white/5 h-5 rounded-full overflow-hidden border border-white/5 p-1">
+                    <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${videoResult.overall_probability * 100}%` }}
                         transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600 shadow-[0_0_15px_rgba(244,63,94,0.4)]"
+                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600"
                       />
                     </div>
                   </div>

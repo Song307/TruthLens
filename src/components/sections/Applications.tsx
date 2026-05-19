@@ -125,24 +125,6 @@ const Applications: React.FC = () => {
           })}
         </div>
       </section>
-
-      {/* --- 5. 브랜드 강조 Quote --- */}
-      <section className="w-full py-20 px-[20%] bg-[#F8FAFC]">
-        <div className="w-full">
-          <ScrollReveal>
-            <div className="border-2 border-brand/20 bg-gradient-to-b from-slate-900 to-slate-950 text-white rounded-[36px] p-12 md:p-16 relative shadow-2xl overflow-hidden text-center">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
-              <div className="text-brand/40 text-8xl font-serif leading-none absolute top-6 left-12 select-none pointer-events-none">“</div>
-              <p className="text-xl md:text-3xl font-bold text-white leading-relaxed mb-8 relative z-10 max-w-2xl mx-auto">
-                복잡한 팩트체크 과정 전에 한 번 돌려보기에 딱 좋아요.<br />
-                내가 본 시각 정보가 조작되었는지 바로 알 수 있거든요.
-              </p>
-              <div className="w-12 h-0.5 bg-brand mx-auto mb-6 relative z-10"></div>
-              <p className="text-brand-light font-bold text-lg relative z-10">- 20대 대학생 체험단 후기</p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
     </>
   );
 };

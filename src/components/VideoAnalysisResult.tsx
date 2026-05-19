@@ -30,7 +30,7 @@ const VideoAnalysisResult: React.FC<Props> = ({ data }) => {
           <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/5 blur-2xl rounded-full" />
           <span className="text-xs font-black text-slate-500 mb-3 uppercase tracking-[0.2em] relative z-10">최대 변조 가능성</span>
           <div className={`text-5xl font-black relative z-10 drop-shadow-sm ${data.overall_probability > 0.5 ? 'text-rose-600' : 'text-emerald-600'}`}>
-            {(data.overall_probability * 100).toFixed(1)}%
+            {(data.overall_probability).toFixed(2)}%
           </div>
         </div>
         <div className="md:col-span-2 bg-slate-50 border border-slate-100 rounded-3xl p-8 flex items-start gap-6 relative overflow-hidden group">

@@ -1,13 +1,17 @@
 import React from 'react';
-import { Lock } from 'lucide-react';
+import { Lock, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../ScrollReveal';
 
-const FAQ: React.FC = () => {
+interface FAQProps {
+  onAnalyzeStart?: () => void;
+}
+
+const FAQ: React.FC<FAQProps> = ({ onAnalyzeStart }) => {
   return (
-    <section id="faq" className="w-full min-h-[calc(100vh-96px)] py-20 bg-white border-t border-slate-100 flex items-center">
-      <div className="w-full px-[20%]">
+    <section id="faq" className="w-full min-h-[calc(100vh-96px)] py-40 bg-white border-t border-slate-100 flex flex-col items-center">
+      <div className="w-full px-[20%] mb-40">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6 text-center lg:text-left">
+          <div className="lg:col-span-4 space-y-6 text-center lg:text-left">
             <div className="inline-block px-4 py-1.5 bg-blue-50 border border-blue-200 text-brand rounded-full text-xs font-bold tracking-wider">
               FAQ
             </div>
@@ -48,6 +52,57 @@ const FAQ: React.FC = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* 분석 유도 섹션 (디자인 및 문구 전면 개편) */}
+      <div className="w-full bg-slate-900 py-24 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand/10 rounded-full blur-[120px]" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]" />
+        </div>
+
+        <ScrollReveal>
+          <div className="max-w-4xl mx-auto px-6 text-center space-y-10 relative z-10">
+            <div className="space-y-4">
+              <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                망설임 없는 진실 확인,<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light via-cyan-300 to-white">
+                  TruthLens와 함께 시작하세요.
+                </span>
+              </h3>
+              <p className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                인공지능이 팩트체크의 번거로움을 즉각적인 확신으로 바꿔드립니다.
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button 
+                onClick={onAnalyzeStart}
+                className="group flex items-center justify-center gap-3 px-12 py-5 bg-white text-slate-950 hover:bg-brand-light hover:text-white rounded-2xl font-black text-xl transition-all shadow-xl hover:shadow-brand/20 hover:-translate-y-1"
+              >
+                무료로 분석 시작하기 <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-8 pt-4">
+              <div className="text-center">
+                <div className="text-white font-bold text-2xl">HYBRID</div>
+                <div className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">CNN + ViT</div>
+              </div>
+              <div className="w-px h-8 bg-slate-800" />
+              <div className="text-center">
+                <div className="text-white font-bold text-2xl">REAL-TIME</div>
+                <div className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">RAG 기술 기반</div>
+              </div>
+              <div className="w-px h-8 bg-slate-800" />
+              <div className="text-center">
+                <div className="text-white font-bold text-2xl">SAFE</div>
+                <div className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">데이터 보안</div>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

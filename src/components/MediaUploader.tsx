@@ -124,12 +124,12 @@ const MediaUploader: React.FC<Props> = ({ onAnalyze, loading, fileType = 'image'
             <X size={16} />
           </button>
           
-          {/* 미리보기 컨테이너 크기 제한: max-h-96 설정 */}
-          <div className="w-full max-h-[400px] flex justify-center items-center overflow-hidden rounded-xl bg-slate-100">
+          {/* 미리보기 컨테이너 크기 제한 */}
+          <div className="w-full flex justify-center items-center overflow-hidden rounded-xl bg-slate-100">
             {selectedFile?.type.startsWith('video') ? (
-              <video src={preview} className="max-w-full max-h-full" controls />
+              <video src={preview} className="max-w-full h-auto max-h-[500px]" controls />
             ) : (
-              <img src={preview} alt="preview" className="max-w-full max-h-full object-contain shadow-sm rounded-lg" />
+              <img src={preview} alt="preview" className="max-w-full h-auto max-h-[500px] object-contain shadow-sm rounded-lg" />
             )}
           </div>
 
@@ -142,14 +142,6 @@ const MediaUploader: React.FC<Props> = ({ onAnalyze, loading, fileType = 'image'
           >
             {loading ? <Loader2 className="animate-spin" size={20} /> : '딥페이크 조작 분석 시작'}
           </motion.button>
-
-          {loading && (
-            <div className="w-full mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-              <p className="text-sm text-brand text-center font-bold">
-                <Loader2 className="animate-spin inline-block mr-2" size={16} /> AI가 분석 중입니다...
-              </p>
-            </div>
-          )}
         </div>
       )}
     </div>
