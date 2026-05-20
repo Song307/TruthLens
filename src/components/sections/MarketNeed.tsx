@@ -64,106 +64,103 @@ const MarketNeed: React.FC = () => {
     else setActiveThreatIdx(3);
   });
 
+  const activeItem = marketThreatItems[activeThreatIdx];
+
   return (
-    <section id="market-need" ref={marketThreatRef} className="w-full relative bg-white border-t border-slate-100 overflow-hidden">
-      
-      {/* Sticky Background Text Container */}
-      <div className="sticky top-0 w-full h-screen flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeThreatIdx}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[120px] md:text-[250px] lg:text-[320px] font-black text-slate-100/80 tracking-tighter text-center whitespace-nowrap"
-          >
-            {marketThreatItems[activeThreatIdx].bgText}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Vertical Stacked Content Container */}
-      <div className="relative z-10 -mt-[100vh]">
+    <section id="market-need" ref={marketThreatRef} className="w-full h-[350vh] relative bg-white border-t border-slate-100">
+      {/* Sticky Scroll Slideshow Viewport */}
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center items-center z-10">
         
-        {/* Top Section Header */}
-        <div className="w-full px-[20%] pt-20">
+        {/* 1. Background Text Layer */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeThreatIdx}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[120px] md:text-[250px] lg:text-[320px] font-black text-slate-100/80 tracking-tighter text-center whitespace-nowrap"
+            >
+              {activeItem.bgText}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* 4 Vertical Sections Stacked */}
-        <div className="space-y-32 md:space-y-48 pb-32">
-          {marketThreatItems.map((item, idx) => (
-            <div key={idx} className="min-h-[80vh] flex items-center justify-center w-full px-[20%]">
-              <motion.div
-                initial={{ opacity: 0, y: 120 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className={`w-full flex flex-col gap-8 md:gap-16 items-center ${
-                  item.align === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'
-                }`}
-              >
-                {/* Large Image */}
-                <div className="w-full lg:w-1/2 h-[350px] md:h-[500px] relative rounded-none overflow-hidden shadow-2xl border border-slate-200/60 group">
-                  <img
-                    src={item.bgImage}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
-                  <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white z-10">
-                    <span className="text-xs md:text-sm font-bold tracking-widest uppercase bg-rose-600/90 backdrop-blur-md px-3 py-1 rounded-full">
-                      {item.stat}
-                    </span>
-                    <span className="text-xs text-white/80 font-medium">TruthLens AI Fact-Check</span>
+        {/* 2. Interactive Card Content Layer */}
+        <div className="w-full px-[10%] md:px-[20%] relative z-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeThreatIdx}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className={`w-full flex flex-col gap-8 md:gap-16 items-center ${
+                activeItem.align === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'
+              }`}
+            >
+              {/* Large Image */}
+              <div className="w-full lg:w-1/2 h-[300px] md:h-[450px] relative rounded-none overflow-hidden shadow-2xl border border-slate-200/60 group">
+                <img
+                  src={activeItem.bgImage}
+                  alt={activeItem.title}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
+                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white z-10">
+                  <span className="text-xs md:text-sm font-bold tracking-widest uppercase bg-rose-600/90 backdrop-blur-md px-3 py-1 rounded-full">
+                    {activeItem.stat}
+                  </span>
+                  <span className="text-xs text-white/80 font-medium">TruthLens AI Fact-Check</span>
+                </div>
+              </div>
+
+              {/* Text Details & Visual Bar Chart */}
+              <div className="w-full lg:w-1/2 space-y-6 px-4 md:px-8 py-6">
+                <div className="space-y-3">
+                  <div className="text-4xl md:text-6xl font-black text-rose-600 tracking-tight">
+                    {activeItem.stat}
                   </div>
+                  <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                    {activeItem.title}
+                  </h3>
+                  <div className="text-lg md:text-xl font-bold text-slate-700">
+                    {activeItem.subheadline}
+                  </div>
+                  <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed pt-2 border-t border-slate-200">
+                    {activeItem.desc}
+                  </p>
                 </div>
 
-                {/* Text Details & Visual Bar Chart */}
-                <div className="w-full lg:w-1/2 space-y-6 px-4 md:px-8 py-6">
-                  <div className="space-y-3">
-                    <div className="text-4xl md:text-6xl font-black text-rose-600 tracking-tight">
-                      {item.stat}
-                    </div>
-                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
-                      {item.title}
-                    </h3>
-                    <div className="text-lg md:text-xl font-bold text-slate-700">
-                      {item.subheadline}
-                    </div>
-                    <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed pt-2 border-t border-slate-200">
-                      {item.desc}
-                    </p>
+                {/* Visual Bar Chart */}
+                <div className="space-y-2 pt-4">
+                  <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <span>심각도 지표 (Severity Index)</span>
+                    <span>{activeItem.barPercentage}%</span>
                   </div>
-
-                  {/* Visual Bar Chart */}
-                  <div className="space-y-2 pt-4">
-                    <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      <span>심각도 지표 (Severity Index)</span>
-                      <span>{item.barPercentage}%</span>
-                    </div>
-                    <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${item.barPercentage}%` }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-rose-500 to-rose-600 rounded-full"
-                      />
-                    </div>
+                  <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
+                    <motion.div 
+                      key={activeThreatIdx}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${activeItem.barPercentage}%` }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="h-full bg-gradient-to-r from-rose-500 to-rose-600 rounded-full"
+                    />
                   </div>
                 </div>
-              </motion.div>
-            </div>
-          ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Bottom Footer Source Credit */}
-        <div className="w-full px-[20%] pt-6 pb-12">
-          <p className="text-xs md:text-sm text-slate-400 font-medium leading-relaxed text-center md:text-left">
+        {/* 3. Bottom Footer Source Credit */}
+        <div className="absolute bottom-6 left-0 w-full px-[10%] md:px-[20%] text-center z-10">
+          <p className="text-[10px] md:text-xs text-slate-400 font-medium leading-relaxed">
             출처: 한국언론진흥재단(KPF), 딥페이크 관련 인식 조사 (2024) / 로이터 저널리즘 연구소 & 한국언론진흥재단, 디지털 뉴스 리포트 (2023/2024) / 방송통신위원회 & KISDI, 지능정보사회 이용자 패널조사 (2023/2024)
           </p>
         </div>
+
       </div>
     </section>
   );
