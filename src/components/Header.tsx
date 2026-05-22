@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShieldCheck, Code2, ChevronDown, MessageSquareText, ImageIcon, Film, AlertTriangle, XCircle, Zap, Layout, HelpCircle } from 'lucide-react';
+import { Code2, ChevronDown, MessageSquareText, ImageIcon, Film, AlertTriangle, XCircle, Zap, Layout, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
@@ -87,8 +87,11 @@ const Header: React.FC<HeaderProps> = ({ currentPage = 'main', onNavigate }) => 
     <header className={headerContainerClass}>
       <div className={`w-full h-full flex items-center justify-between transition-all duration-500 will-change-transform transform-gpu ${isAtTop ? 'px-[10%] md:px-[20%]' : 'px-6 md:px-10'}`}>
         {/* Logo Area */}
-        <div className="flex items-center gap-2 cursor-pointer group" onClick={() => onNavigate?.('main')}>
-          <ShieldCheck size={26} strokeWidth={2.5} className="text-cyan-400 group-hover:scale-110 transition-transform drop-shadow" />
+        <div className="flex items-center gap-2 cursor-pointer group select-none" onClick={() => onNavigate?.('main')}>
+          <div className="relative w-[26px] h-[26px] flex items-center justify-center text-cyan-400 text-[26px] shrink-0 drop-shadow">
+            <i className="bi bi-shield-check absolute transition-all duration-300 opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-90"></i>
+            <i className="bi bi-shield-fill-check absolute transition-all duration-300 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"></i>
+          </div>
           <span className={`font-black text-xl tracking-tight ${textColorClass} drop-shadow-md`}>TruthLens</span>
         </div>
 

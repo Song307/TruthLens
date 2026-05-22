@@ -140,7 +140,7 @@ const MediaUploader: React.FC<Props> = ({ onAnalyze, loading, fileType = 'image'
             disabled={loading}
             className="w-full mt-4 py-3.5 bg-brand text-white rounded-xl font-bold flex items-center justify-center gap-2 disabled:bg-slate-200 disabled:text-slate-400 shadow-sm"
           >
-            {loading ? <Loader2 className="animate-spin" size={20} /> : '딥페이크 조작 분석 시작'}
+            딥페이크 조작 분석 시작
           </motion.button>
         </div>
       )}
