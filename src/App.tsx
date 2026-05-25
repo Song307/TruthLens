@@ -1,6 +1,6 @@
 import React, { useState, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquareText, Image as ImageIcon, Loader2, Film, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { MessageSquareText, Image as ImageIcon, Loader2, Film, ArrowRight, ArrowLeft, Sparkles, AlertTriangle } from 'lucide-react';
 import api from './api/axios';
 import { AnalysisResponse, FactCheckData, MediaAnalysisData, VideoAnalysisData } from './types/analysis';
 import ResultDetails from './components/ResultDetails';
@@ -392,7 +392,7 @@ const App: React.FC = () => {
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
             {/* Page Header Area */}
-            <div className="max-w-4xl mb-8 relative z-10">
+            <div className="w-full mb-8 relative z-10">
               {currentPage === 'analyze-text' && (
                 <>
                   <motion.div 
@@ -405,7 +405,7 @@ const App: React.FC = () => {
                   <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     진실을 가리는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">텍스트 데이터</span> 분석
                   </h1>
-                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed">
                     의심되는 뉴스 URL이나 문장을 입력하세요. TruthLens AI가 실시간으로 수억 개의 데이터셋과 대조하여 사실 여부를 확인합니다.
                   </p>
                 </>
@@ -423,9 +423,23 @@ const App: React.FC = () => {
                   <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     픽셀 단위의 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-purple-600">조작 흔적</span> 추적
                   </h1>
-                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed mb-6">
                     이미지를 업로드하여 위변조 여부를 확인하세요. 육안으로 식별 불가능한 미세한 노이즈와 아티팩트를 AI가 잡아냅니다.
                   </p>
+                  
+                  {/* Warning Alert Card */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex items-start gap-2.5 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 text-amber-700 text-left text-sm md:text-base font-medium w-full"
+                  >
+                    <AlertTriangle size={18} className="shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-amber-800">안내: </span>
+                      현재 이미지 분석은 AI 전처리 모델만 구현된 상태로, 학습 데이터가 부족하여 정확도가 낮습니다. 정밀 모델과 대용량 데이터셋은 추후 업데이트 예정입니다.
+                    </div>
+                  </motion.div>
                 </>
               )}
 
@@ -441,9 +455,23 @@ const App: React.FC = () => {
                   <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     딥페이크 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-orange-600">시공간 일관성</span> 분석
                   </h1>
-                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-2xl">
+                  <p className="text-slate-600 text-base md:text-lg font-medium leading-relaxed mb-6">
                     프레임 간의 미세한 떨림과 부자연스러운 움직임을 탐지합니다. 최첨단 3D-CNN 모델이 영상의 진위를 정밀 판별합니다.
                   </p>
+
+                  {/* Warning Alert Card */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex items-start gap-2.5 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 text-amber-700 text-left text-sm md:text-base font-medium w-full"
+                  >
+                    <AlertTriangle size={18} className="shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-amber-800">안내: </span>
+                      현재 동영상 분석은 AI 전처리 모델만 구현된 상태로, 학습 데이터가 부족하여 정확도가 낮습니다. 정밀 모델과 대용량 데이터셋은 추후 업데이트 예정입니다.
+                    </div>
+                  </motion.div>
                 </>
               )}
             </div>
@@ -511,32 +539,52 @@ const App: React.FC = () => {
             <div className="mt-12 relative z-10">
               {currentPage === 'analyze-text' && textResult && (
                 <ScrollReveal>
-                  <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
+                  <div className="relative bg-white/70 backdrop-blur-xl rounded-[32px] p-8 md:p-10 border border-slate-200/60 shadow-[0_30px_60px_rgba(15,23,42,0.04)] mb-12 overflow-hidden group">
+                    {/* Decorative Color Glow */}
+                    <div className="absolute -top-32 -right-32 w-80 h-80 bg-cyan-500/5 rounded-full blur-[90px] pointer-events-none" />
+
+                    {/* Header Area */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 mb-8">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-cyan-500/5 rounded-2xl border border-cyan-500/10 text-cyan-600 shrink-0">
+                          <MessageSquareText size={28} />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-black text-cyan-600 uppercase tracking-widest block mb-0.5">TEXT FACT-CHECK REPORT</span>
+                          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">{textResult.title}</h2>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 self-start sm:self-center px-3.5 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full text-emerald-600 text-xs font-black uppercase tracking-wider shrink-0">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        COMPLETED
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 p-6 bg-slate-50/50 rounded-2xl border border-slate-100/60">
                       <div className="flex-1">
-                        <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-4">{textResult.title}</h2>
-                        <div className="flex items-center gap-4 text-slate-500 font-medium">
+                        <div className="flex items-center gap-4 text-slate-500 font-medium text-sm md:text-base">
                           <span className="flex items-center gap-1.5"><Sparkles size={16} className="text-cyan-600" /> 분석 완료</span>
                           <span className="w-1 h-1 bg-slate-300 rounded-full" />
                           <span>RAG 기반 교차 검증</span>
                         </div>
                       </div>
-                      <div className={`px-8 py-4 rounded-3xl font-black text-2xl border ${
-                        textResult.verdict === '진실' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 
-                        textResult.verdict === '거짓' ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-amber-50 text-amber-600 border-amber-200'
+                      <div className={`px-6 py-2.5 rounded-2xl font-black text-lg border shrink-0 transition-all ${
+                        textResult.verdict === '진실' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.08)]' : 
+                        textResult.verdict === '거짓' ? 'bg-rose-500/10 border-rose-500/20 text-rose-600 shadow-[0_0_15px_rgba(244,63,94,0.08)]' : 
+                        'bg-amber-500/10 border-amber-500/20 text-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.08)]'
                       }`}>
-                        {textResult.verdict}
+                        판정 결과: {textResult.verdict}
                       </div>
                     </div>
                     
-                    <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden group shadow-sm">
+                    <div className="mb-8 bg-white p-6 md:p-8 rounded-[28px] border border-slate-100 relative overflow-hidden group shadow-sm">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl rounded-full" />
                       <div className="relative z-10">
-                        <div className="flex items-center justify-between mb-6">
-                          <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">신뢰도 점수 (Truth Score)</span>
-                          <span className="text-slate-900 font-black text-4xl">{textResult.score} <span className="text-slate-400 text-2xl font-medium">/ 100</span></span>
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">신뢰도 점수 (Truth Score)</span>
+                          <span className="text-slate-900 font-black text-3xl">{textResult.score} <span className="text-slate-400 text-xl font-medium">/ 100</span></span>
                         </div>
-                        <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
+                        <div className="w-full bg-slate-100 h-4 rounded-full overflow-hidden border border-slate-200 p-0.5">
                           <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${textResult.score}%` }}
@@ -552,7 +600,7 @@ const App: React.FC = () => {
                     </div>
 
                     <div className="max-w-none">
-                      <p className="text-slate-800 leading-relaxed text-xl md:text-2xl mb-12 font-medium bg-white p-8 rounded-3xl border-l-4 border-cyan-500 shadow-sm">
+                      <p className="text-slate-800 leading-relaxed text-lg md:text-xl mb-10 font-medium bg-white p-6 rounded-3xl border-l-4 border-cyan-500 shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
                         {textResult.summary}
                       </p>
                     </div>
@@ -562,45 +610,85 @@ const App: React.FC = () => {
                 </ScrollReveal>
               )}
 
-            {currentPage === 'analyze-image' && mediaResult && (
-              <ScrollReveal>
-                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
-                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
-                    <ImageIcon className="text-fuchsia-600" size={40} /> 이미지 정밀 분석 결과
-                  </h3>
-                  <MediaResult data={mediaResult} />
-                </div>
-              </ScrollReveal>
-            )}
+              {currentPage === 'analyze-image' && mediaResult && (
+                <ScrollReveal>
+                  <div className="relative bg-white/70 backdrop-blur-xl rounded-[32px] p-8 md:p-10 border border-slate-200/60 shadow-[0_30px_60px_rgba(15,23,42,0.04)] mb-12 overflow-hidden group">
+                    {/* Decorative Color Glow */}
+                    <div className="absolute -top-32 -right-32 w-80 h-80 bg-fuchsia-500/5 rounded-full blur-[90px] pointer-events-none" />
 
-            {currentPage === 'analyze-video' && videoResult && (
-              <ScrollReveal>
-                <div className="bg-slate-50 rounded-[32px] p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 mb-12">
-                  <h3 className="text-3xl md:text-4xl font-black mb-10 text-slate-900 flex items-center gap-4">
-                    <Film className="text-rose-600" size={40} /> 동영상 딥페이크 분석 결과
-                  </h3>
-                  
-                  <div className="mb-12 bg-white p-8 md:p-10 rounded-[28px] border border-slate-100 relative overflow-hidden shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">최종 조작 감지 확률</span>
-                      <span className="text-rose-600 font-black text-4xl">
-                        {(videoResult.overall_probability).toFixed(2)}%
-                      </span>
+                    {/* Header Area */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 mb-8">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-fuchsia-500/5 rounded-2xl border border-fuchsia-500/10 text-fuchsia-600 shrink-0">
+                          <ImageIcon size={28} />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-black text-fuchsia-600 uppercase tracking-widest block mb-0.5">IMAGE FORENSIC REPORT</span>
+                          <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                            이미지 정밀 분석 결과
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 self-start sm:self-center px-3.5 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full text-emerald-600 text-xs font-black uppercase tracking-wider shrink-0">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        COMPLETED
+                      </div>
                     </div>
-                    <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden border border-slate-200 p-1">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${videoResult.overall_probability * 100}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600"
-                      />
-                    </div>
+
+                    <MediaResult data={mediaResult} />
                   </div>
-                  
-                  <VideoAnalysisResult data={videoResult} />
-                </div>
-              </ScrollReveal>
-            )}
+                </ScrollReveal>
+              )}
+
+              {currentPage === 'analyze-video' && videoResult && (
+                <ScrollReveal>
+                  <div className="relative bg-white/70 backdrop-blur-xl rounded-[32px] p-8 md:p-10 border border-slate-200/60 shadow-[0_30px_60px_rgba(15,23,42,0.04)] mb-12 overflow-hidden group">
+                    {/* Decorative Color Glow */}
+                    <div className="absolute -top-32 -right-32 w-80 h-80 bg-rose-500/5 rounded-full blur-[90px] pointer-events-none" />
+
+                    {/* Header Area */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 mb-8">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-rose-500/5 rounded-2xl border border-rose-500/10 text-rose-600 shrink-0">
+                          <Film size={28} />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest block mb-0.5">VIDEO DEEPFAKE REPORT</span>
+                          <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                            동영상 딥페이크 분석 결과
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 self-start sm:self-center px-3.5 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full text-emerald-600 text-xs font-black uppercase tracking-wider shrink-0">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        COMPLETED
+                      </div>
+                    </div>
+
+                    <div className="mb-8 bg-white p-6 md:p-8 rounded-[28px] border border-slate-100 relative overflow-hidden shadow-sm">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 blur-3xl rounded-full" />
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">최종 조작 감지 확률</span>
+                          <span className="text-rose-600 font-black text-3xl">
+                            {(videoResult.overall_probability).toFixed(2)}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-4 rounded-full overflow-hidden border border-slate-200 p-0.5">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${videoResult.overall_probability * 100}%` }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <VideoAnalysisResult data={videoResult} />
+                  </div>
+                </ScrollReveal>
+              )}
             </div>
           </motion.div>
         )}

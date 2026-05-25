@@ -86,16 +86,8 @@ const VideoUploader: React.FC<Props> = ({ onAnalyze, loading }) => {
             disabled={loading}
             className="w-full mt-4 py-3.5 bg-brand text-white rounded-xl font-bold flex items-center justify-center gap-2 disabled:bg-slate-200 disabled:text-slate-400 shadow-sm"
           >
-            {loading ? <Loader2 className="animate-spin" size={20} /> : '딥페이크 조작 분석 시작'}
+            딥페이크 조작 분석 시작
           </motion.button>
-
-          {loading && (
-            <div className="w-full mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-              <p className="text-sm text-brand text-center font-bold">
-                <Loader2 className="animate-spin inline-block mr-2" size={16} /> AI가 분석 중입니다...
-              </p>
-            </div>
-          )}
         </div>
       )}
     </div>
