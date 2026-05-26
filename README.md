@@ -47,6 +47,13 @@
 ## 사용자 흐름 및 시스템 구조
 
 ### User Flow
+
+사용자는 직관적이고 단순한 인터페이스를 통해 복잡한 멀티모달 분석을 수행할 수 있습니다.
+
+1.  **데이터 입력 (Multi-modal Input)**: 뉴스 기사 URL, 이미지 파일(PNG/JPG), 또는 동영상 링크를 업드로드합니다.
+2.  **지능형 분석 (AI Analysis)**: 입력된 데이터 유형에 따라 RAG 기반 팩트체크, CNN/ViT 하이브리드 이미지 분석, 또는 3D-CNN 시공간 비디오 분석이 자동으로 실행됩니다.
+3.  **종합 리포트 (Intelligence Report)**: 분석 결과를 시각화하여 'Truth Score'와 함께 판독 근거, 조작 의심 영역(Heatmap), 변조 타임라인 등을 포함한 상세 리포트를 제공합니다.
+
 ```mermaid
 graph LR
     A[홈페이지 진입] --> B{데이터 입력}
@@ -59,6 +66,50 @@ graph LR
 ```
 
 ### System Architecture
+
+TruthLens의 아키텍처는 효율적인 연산 처리와 확장성을 위해 계층형 구조(Layered Architecture)를 채택했습니다.
+
+#### Architecture Overview
+- **Frontend Layer**: React 19와 Framer Motion을 사용하여 고성능 인터랙티브 UI를 구현하고, 사용자 입력을 처리합니다.
+- **Backend Layer**: FastAPI를 기반으로 비동기 API 서버를 구축하여 고부하 AI 추론 작업을 효율적으로 오케스트레이션합니다.
+- **AI & Data Layer**: 최신 LLM(Lama 3.3)과 Deep Learning 모델(CNN, ViT)을 활용하여 사실 관계 검증 및 미디어 위조를 정밀 탐지합니다.
+
+```mermaid
+graph LR
+    subgraph Client [Frontend Layer]
+        U[React Web App] --> FM[Framer Motion UI]
+    end
+
+    subgraph Server [Backend Layer]
+        F[FastAPI Server]
+    end
+
+    subgraph AI_Engine [AI & Data Layer]
+        RAG[RAG Integration]
+        VL[Vision Learning]
+        DL[Deep Learning]
+    end
+
+    U <--> |REST API| F
+    F --> |Serper API| RAG
+    F --> |CNN/ViT| VL
+    F --> |3D-CNN| DL
+
+    %% Styling for transparency
+    classDef transNode fill:none,stroke:#333,stroke-width:1px;
+    class U,FM,F,RAG,VL,DL transNode;
+    style Client fill:none,stroke:#333,stroke-width:1px;
+    style Server fill:none,stroke:#333,stroke-width:1px;
+    style AI_Engine fill:none,stroke:#333,stroke-width:1px;
+```
+
+#### Interaction Flow
+데이터가 시스템 각 계층을 거치며 검증되는 상세 프로세스입니다.
+
+1.  **Request**: 프론트엔드에서 분석을 요청하면 백엔드에서 데이터 유형을 식별합니다.
+2.  **Verification**: 텍스트 데이터의 경우 실시간 검색(Serper API)과 LLM(RAG)을 통해 팩트체크를 수행하며, 미디어 데이터는 딥러닝 엔진으로 왜곡 패턴을 추론합니다.
+3.  **Response**: 최종적으로 수치화된 확률 데이터와 시각적 증거(Heatmap 등)를 JSON 형태로 결합하여 유저에게 반환합니다.
+
 ```mermaid
 sequenceDiagram
     participant U as User (Frontend)
@@ -79,6 +130,14 @@ sequenceDiagram
     end
     F-->>U: JSON 리포트 & 시각화 데이터 반환
 ```
+
+---
+
+## UI 설계 (Interface Design)
+
+<p align="center">
+  <img src="src/assets/UI.png" width="100%" alt="TruthLens UI Design" />
+</p>
 
 ---
 
@@ -107,5 +166,3 @@ sequenceDiagram
 <div align="center">
   <p>© 2026 TruthLens Team. All rights reserved.</p>
 </div>
-
-o
