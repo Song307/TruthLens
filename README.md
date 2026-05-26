@@ -166,5 +166,3 @@ sequenceDiagram
 <div align="center">
   <p>© 2026 TruthLens Team. All rights reserved.</p>
 </div>
-
-o
