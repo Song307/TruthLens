@@ -1,4 +1,11 @@
 # TruthLens
+
+<div align="center">
+  <img src="src/assets/TL_title.png" width="100%" alt="TruthLens Main Banner" />
+</div>
+
+<br />
+
 ### AI-Powered Multi-modal Fact-Checking Platform
 
 <div align="center">
