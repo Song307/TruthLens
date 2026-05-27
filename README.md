@@ -7,15 +7,16 @@
     AI-generated misinformation is rising. TruthLens is the counter-measure.
   </p>
 
+  <a href="[#](https://www.notion.so/ssongha/5-TruthLens-35daf03399e7800a9e52f0128447e978?source=copy_link)">
+      <img src="https://img.shields.io/badge/Project_Doc-Notion-000000?style=for-the-badge&logo=notion&logoColor=white" alt="Notion" />
+    </a>
+
   <p align="center">
     <a href="https://truthlens.kro.kr/">
       <img src="https://img.shields.io/badge/Live_Demo-Visit%20Site-00D1FF?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
     </a>
     <a href="https://huggingface.co/spaces/truthlens/api">
       <img src="https://img.shields.io/badge/API_Server-HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="API Server" />
-    </a>
-    <a href="https://github.com/song307/truthlens-web">
-      <img src="https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Frontend" />
     </a>
   </p>
 </div>
